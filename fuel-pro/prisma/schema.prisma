@@ -1,34 +1,28 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
-// datasource db {
-//   provider = "postgresql"
-//   url      = env("DATABASE_URL")
-// }
-
 datasource db {
-  provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model User {
-  id      Int     @id @default(autoincrement())
+  id       Int     @id @default(autoincrement())
+  name     String?
   email    String
   password String
-  name     String?
-  posts Post[]
+  posts    Post[]
 }
 
 model Post {
-  id        String     @default(cuid()) @id
-  title     String
-  content   String
-  published Boolean @default(false)
-  authorId  Int
-  author    User?   @relation(fields: [authorId], references: [id])
+  id      Int    @id @default(autoincrement())
+  user_id Int
+  street  String
+  city    String
+  zipcode Int
+
+  // Define a foreign key relationship with the User model
+  author User @relation(fields: [user_id], references: [id])
 }
