@@ -33,7 +33,7 @@ const Dashboard = () => {
     return (
         <div>
             <Image className=' h-screen flex items-center justify-center bg-cover bg-center -z-50 ' src='/dashboard_image.avif' alt={''} width={dynamicWidth}
-                height={dynamicHeight} layout={{type: "responsive",}} ></Image>
+                height={dynamicHeight} layout={{type: "responsive"}} ></Image>
             <div className=' absolute left-1 top-1 z-10 text-3xl'>this is dashboard</div>
         </div>
     )
