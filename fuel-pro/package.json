@@ -35,12 +35,8 @@
     "autoprefixer": "^10.0.1",
     "postcss": "^8",
     "prisma": "^5.9.1",
-<<<<<<< HEAD
-    "tailwindcss": "^3.4.1",
-=======
     "tailwind-merge": "^2.2.1",
     "tailwindcss": "^3.3.0",
->>>>>>> origin
     "typescript": "^5"
   }
 }
