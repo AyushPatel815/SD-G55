@@ -1,6 +1,6 @@
 # SD-G55
 
-We will be using NextJS, typescript, and Tailwind CSS for the Front-end and firebase for backend
+We will be using NextJS, typescript, and Tailwind CSS for the Front-end and TyprScript for the backend, and Vercel Postgres for the database.
 
 
 We will be using Agile Methodology
