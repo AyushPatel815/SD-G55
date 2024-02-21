@@ -4,8 +4,10 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import dynamic from 'next/dynamic';
 
+import NavBar from '../components/NavBar';
 
-const Dashboard = () => {
+
+function Dashboard() {
     const [screenWidth, setScreenWidth] = useState<number>(0);
 
     useEffect(() => {
@@ -32,11 +34,14 @@ const Dashboard = () => {
 
     return (
         <div>
-            <Image className=' h-screen flex items-center justify-center bg-cover bg-center -z-50 ' src='/dashboard_image.avif' alt={''} width={dynamicWidth}
+            <NavBar />
+            <Image className=' h-screen flex items-center justify-center bg-cover bg-center -z-50 md:bg-transparent brightness-50 ' src='/dashboard_image.avif' alt={''} width={dynamicWidth}
                 height={dynamicHeight} layout={{type: "responsive"}} ></Image>
-            <div className=' absolute left-1 top-1 z-10 text-3xl'>this is dashboard</div>
+            <div className=' absolute left-1 top-1 z-10 text-3xl'></div>
         </div>
     )
 }
 
 export default Dashboard
+
+
