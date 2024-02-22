@@ -1,9 +1,14 @@
 import React from 'react'
+import NavBar from '../components/NavBar'
+import BasicTable from '../fuel-history/ConstantTable'
 
 function page() {
   return (
+    
     <div>
-      fuel history page
+      <NavBar/>
+      <br />
+      <BasicTable />
     </div>
   )
 }
