@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import dynamic from 'next/dynamic';
-
 import NavBar from '../components/NavBar';
 
 
@@ -33,7 +32,10 @@ function Dashboard() {
     const dynamicHeight = (9 / 16) * dynamicWidth; // Assuming a 16:9 aspect ratio
 
     return (
+        
         <div>
+            <NavBar />
+            <Image className=' h-screen flex items-center justify-center bg-cover bg-center -z-50 ' src='/dashboard_image.avif' alt={''} width={dynamicWidth}
             <NavBar />
             <Image className=' h-screen flex items-center justify-center bg-cover bg-center -z-50 md:bg-transparent brightness-50 ' src='/dashboard_image.avif' alt={''} width={dynamicWidth}
                 height={dynamicHeight} layout={{type: "responsive"}} ></Image>
