@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 interface Row {
   Order_Number: number;
@@ -10,7 +11,7 @@ interface Row {
 
 const BasicTable: React.FC = () => {
   const tableData: Row[] = [
-    { Order_Number: 1, GallonsRequested: 59,  DeliveryAddress: '430 MLK Blvd, Houston, TX', DeliveryDate:'02/21/2024', Price: "800"},
+    { Order_Number: 1, GallonsRequested: 59,  DeliveryAddress: '430 MLK Blvd, Houston, TX', DeliveryDate:'02/21/2024', Price: "$800"},
     { Order_Number: 3, GallonsRequested: 72,  DeliveryAddress: '789 Elm St, Another City, CA', DeliveryDate:'02/23/2024', Price: "$950" },
     { Order_Number: 4, GallonsRequested: 35,  DeliveryAddress: '456 Oak St, Somewhere, FL', DeliveryDate:'02/24/2024', Price: "$500" },
     { Order_Number: 5, GallonsRequested: 40,  DeliveryAddress: '123 Pine St, Anytown, USA', DeliveryDate:'02/25/2024', Price: "$600" },
@@ -32,7 +33,15 @@ const BasicTable: React.FC = () => {
 
   return (
     // the border in the line below is the border around the entire table, not just for a cell
-    <div className='mt-16 mx-14 flex justify-center  overflow-auto h-[600px] border border-black w-[1350px]'>
+    <div>
+    <div className='relative'>
+      <Image className='fixed inset-0 h-screen w-screen object-cover object-center z-[-50] md:bg-transparent brightness-[65%]'
+        src='/dashboard-img.png'
+        alt={''} width={600} height={600}></Image>
+      </div>
+
+    <div className=' bg-transparent bg-blue-400'>
+    <div className='mt-16 ml-[20%] mx-14 flex overflow-auto h-[600px] justify-center border border-black w-[1350px]'>
       {/* change bg-color-intensity below to change the background color for the table */}
       {/* All border-color-intensity puts borders on the idividual cells of whatever color you want */}
       <table className='border bg-blue-50 overflow-auto w-[1400px]  h-[90px] font-serif'>
@@ -57,6 +66,8 @@ const BasicTable: React.FC = () => {
           ))}
         </tbody>
       </table>
+    </div>
+    </div>
     </div>
   );
 };

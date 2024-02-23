@@ -9,7 +9,9 @@ function page() {
     <div>
       <NavBar/>
       <br />
+      
       <BasicTable />
+      
     </div>
   )
 }

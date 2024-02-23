@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react'
-import loginImg from '../../public/login-img.jpeg'
+import loginImg from '../../public/login_image.png'
 import Image from 'next/image'
 import logo from '../../public/fuel-pro-logo.png'
 
