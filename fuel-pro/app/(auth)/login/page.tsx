@@ -26,8 +26,8 @@ async function Login () {
             <form action="">
                 <h1 className=' text-3xl font-semibold text-white'>Log in</h1>
                 <div className=' space-y-4 mt-5'>
-                    <Input type='email' name='email' placeholder='Email' className=' bg-[#333] placeholder:text-xs placeholder:text-gray-400 w-full inline-block' />
-                    <Input type='password' name='password' placeholder='password' className=' bg-[#333] placeholder:text-xs placeholder:text-gray-400 w-full inline-block' />
+                    <Input type='email' name='email' placeholder='Email' className=' bg-[#333] placeholder:text-xs text-white placeholder:text-gray-400 w-full inline-block' pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required />
+                    <Input type='password' name='password' placeholder='password' className=' text-white bg-[#333] placeholder:text-xs placeholder:text-gray-400 w-full inline-block' required />
                     <Button type='submit' variant='destructive' className=' w-full text-black bg-[#bbb9b9] hover:bg-slate-500'>Log in</Button>
                 </div>
             </form>
@@ -50,9 +50,4 @@ async function Login () {
 export default Login
 
 
-
-
-function validateInput(name: any, value: any) {
-  throw new Error('Function not implemented.')
-}
 

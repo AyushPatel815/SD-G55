@@ -1,3 +1,4 @@
+'use client';
 import React from 'react'
 import NavBar from '../components/NavBar'
 import BasicTable from '../fuel-history/ConstantTable'
@@ -8,7 +9,9 @@ function page() {
     <div>
       <NavBar/>
       <br />
+      
       <BasicTable />
+      
     </div>
   )
 }
