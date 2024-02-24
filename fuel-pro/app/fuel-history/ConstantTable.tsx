@@ -35,13 +35,13 @@ const BasicTable: React.FC = () => {
     // the border in the line below is the border around the entire table, not just for a cell
     <div>
     <div className='relative'>
-      <Image className='fixed inset-0 h-screen w-screen object-cover object-center z-[-50] md:bg-transparent brightness-[65%]'
+      <Image className='fixed inset-0 h-screen w-screen object-cover object-center z-[-50] brightness-[65%]'
         src='/dashboard-img.png'
         alt={''} width={600} height={600}></Image>
       </div>
 
     <div className=' bg-transparent bg-blue-400'>
-    <div className='mt-16 ml-[20%] mx-14 flex overflow-auto h-[600px] justify-center border border-black w-[1350px]'>
+    <div className='mt-16 ml-[20%] mx-14 flex overflow-auto h-[600px] justify-center border bg-transparent border-black w-[1350px]'>
       {/* change bg-color-intensity below to change the background color for the table */}
       {/* All border-color-intensity puts borders on the idividual cells of whatever color you want */}
       <table className='border bg-blue-50 overflow-auto w-[1400px]  h-[90px] font-serif'>

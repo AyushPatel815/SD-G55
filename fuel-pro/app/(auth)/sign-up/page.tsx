@@ -28,7 +28,7 @@ async function SignUp() {
             </form>
             <div className='text-gray-400 text-sm mt-2'>
                 Already have an account?
-                <Link className=' text-white ml-2' href='/login'>  Log in now!! </Link>
+                <Link className=' text-white ml-2 underline' href='/login'>  Log in now!! </Link>
             </div>
 
             <div className=' flex w-full justify-center items-center gap-x-3 mt-6'>
