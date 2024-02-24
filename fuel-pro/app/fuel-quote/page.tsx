@@ -28,7 +28,7 @@ function page() {
     <div>
       <NavBar />
       <div className='relative'>
-      <Image className='fixed inset-0 h-screen w-screen object-cover object-center z-[-50] md:bg-transparent  brightness-[65%]'
+      <Image className='fixed inset-0 h-screen w-screen object-cover object-center z-[-50] brightness-[65%]'
         src='/dashboard-img.png'
         alt={''} width={600} height={600}></Image>
       </div>

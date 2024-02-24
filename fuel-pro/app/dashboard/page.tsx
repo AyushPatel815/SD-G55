@@ -71,7 +71,7 @@ function Dashboard() {
             {/* Background Image */}
             <Link href='/dashboard'>
                 <Image
-                    className='w-full h-screen object-cover object-center brightness-50 md:bg-transparent'
+                    className='w-screen h-screen object-cover object-center brightness-50 md:bg-transparent'
                     src='/dashboard-img.png'
                     alt={''}
 

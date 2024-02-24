@@ -68,13 +68,13 @@ const StateDropdown: React.FC<StateDropdownProps> = ({ onSelectState }) => {
 
   return (
     <div>
-      <label htmlFor="state" className='block text-sm pb-2'>
+      <label htmlFor="state" className='block text-white text-sm pb-2'>
         State
       </label>
       <select
         name="state"
         id="state"
-        className='border-2 border-gray-500 p-3 rounded-md focus:border-red-500 focus:ring-red-500 w-full'
+        className='border-2 border-gray-500 text-black p-3 rounded-md focus:border-red-500 focus:ring-red-500 w-full'
         value={selectedState}
         onChange={handleStateChange}
       >
