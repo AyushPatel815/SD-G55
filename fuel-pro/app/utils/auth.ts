@@ -1,9 +1,13 @@
 import { NextAuthOptions } from "next-auth";
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import prisma from "./db";
+// import prisma from "./db";
 import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import EmailProvider from "next-auth/providers/email";
+import { PrismaClient } from "@prisma/client";
+
+
+const prisma = new PrismaClient();
 
 
 export const authOptions = {
@@ -32,3 +36,13 @@ export const authOptions = {
     ],
 
 } satisfies NextAuthOptions
+
+// Ensure that prisma is connected to the database
+async function main() {
+  await prisma.$connect();
+}
+
+// Call the main function to ensure prisma is connected when the module is loaded
+main().catch((err) => {
+  console.error('Failed to connect to Prisma:', err);
+});
