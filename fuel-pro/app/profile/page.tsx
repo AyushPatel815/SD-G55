@@ -36,6 +36,7 @@ function Profile() {
     <div>
 
       <NavBar />
+
       <div className='relative'>
       <Image className='fixed inset-0 h-screen w-screen object-cover object-center z-[-50] brightness-[65%]'
         src={Background_img}
@@ -66,10 +67,12 @@ function Profile() {
                   name='lastname'
                   id='last name'
                   placeholder='Enter Last Name' />
+
               </div>
               {/* Address1 */}
               <div className='pb-4'>
                 <label htmlFor="address1" className='block text-sm pb-2'>Address1</label>
+
                 <input className='border-2 border-gray-500 text-black p-3 rounded-md focus:border-red-500 focus:ring-red-500 w-full'
                   type="text"
                   required
@@ -80,7 +83,9 @@ function Profile() {
               {/* Address2 */}
               <div className='pb-4'>
                 <label htmlFor="address2" className='block text-sm pb-2'>Address2</label>
+
                 <input className='border-2 text-black border-gray-500 p-3 rounded-md focus:border-red-500 focus:ring-red-500 w-full'
+
                   type="text"
                   name='address2'
                   id='address2'
@@ -89,9 +94,11 @@ function Profile() {
               {/* City */}
               <div className='pb-4'>
                 <label htmlFor="city" className='block text-sm pb-2'>City</label>
+
                 <input className='border-2 text-black border-gray-500 p-3 rounded-md focus:border-red-500 focus:ring-red-500 w-full'
                   type="text"
                   required
+
                   name='city'
                   id='city'
                   placeholder='Enter City' />
@@ -104,17 +111,21 @@ function Profile() {
                   <option value="FL">Florida</option>
                   <option value="CA">California</option>
                 </select> */}
+
                 
                 <State />
                
+
               </div>
               {/* Zip code */}
               <div className='pb-4'>
                 <label htmlFor="zip" className='block text-sm pb-2'>Zip Code</label>
+
                 <input className='border-2 text-black border-gray-500 p-3 rounded-md focus:border-red-500 focus:ring-red-500 w-full'
                   type="text"
                   name='zip'
                   required
+
                   id='zip'
                   placeholder='Enter Zip Code' />
               </div>
@@ -127,7 +138,9 @@ function Profile() {
             </div>
           </div>
         </form>
+
     
+
       </div>
 
   )

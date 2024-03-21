@@ -6,8 +6,6 @@ import { redirect } from 'next/navigation'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button';
 
-//import '@radix-ui/themes/styles.css';
-// import '@radix-ui/themes/styles.css';
 import { LucideGavel } from 'lucide-react'
 
 import Image from 'next/image'
