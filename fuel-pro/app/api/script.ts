@@ -64,21 +64,21 @@ async function main() {
     }
 
     // Create the second quote entry
-    const secondQuote = await prisma.quote.create({
-        data: {
-            clientUsername: user.username || '',
-            gallons: 20, // Example value
-            price: 30,   // Example value
-            due: 10,     // Example value
-            address: "3623 Lexington common", // Example value
-            city: "Missouri City city",       // Example value
-            state: "Texas",     // Example value
-            zipcode: "12345"           // Example value
-        }
-    });
-    // const user = await prisma.profile.findMany({})
+    // const secondQuote = await prisma.quote.create({
+    //     data: {
+    //         clientUsername: user.username || '',
+    //         gallons: 20, // Example value
+    //         price: 30,   // Example value
+    //         due: 10,     // Example value
+    //         address: "3623 Lexington common", // Example value
+    //         city: "Missouri City city",       // Example value
+    //         state: "Texas",     // Example value
+    //         zipcode: "12345"           // Example value
+    //     }
+    // });
+    // // const user = await prisma.profile.findMany({})
 
-    console.log(secondQuote);
+    // console.log(secondQuote);
 
 }
 
@@ -87,12 +87,12 @@ async function fetchData() {
         // Fetch data from the database
         const users = await prisma.user.findMany();
         const profiles = await prisma.profile.findMany();
-        const quotes = await prisma.quote.findMany();
+        // const quotes = await prisma.quote.findMany();
 
         // Do something with the fetched data
         console.log("Users:", users);
         console.log("Profiles:", profiles);
-        console.log("Quotes:", quotes);
+        // console.log("Quotes:", quotes);
     } catch (error) {
         console.error("Error fetching data:", error);
     } finally {

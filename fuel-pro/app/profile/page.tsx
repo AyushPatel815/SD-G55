@@ -7,8 +7,41 @@ import dynamic from 'next/dynamic';
 import Background_img from "../../public/dashboard-img.png"
 import State from '../components/StateDropdown';
 
+import axios from 'axios'; // Import Axios
+
+
 function Profile() {
   const [screenWidth, setScreenWidth] = useState<number>(0);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    address1: '',
+    address2: '',
+    city: '',
+    state: '',
+    zip: ''
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    console.log('Form data:', formData);
+    try {
+      // Make a POST request to the backend API route
+      const response = await axios.post('/api/profile/profile', { profile: formData });
+      console.log('Profile saved successfully:', response.data);
+    } catch (error) {
+      console.error('Error saving profile:', error);
+    }
+  };
+
 
   useEffect(() => {
     // Function to update screenWidth when the window is resized
@@ -56,16 +89,20 @@ function Profile() {
                 <input className='border-2 border-gray-500 p-3 text-black rounded-md focus:border-red-500 focus:ring-red-500 w-full'
                 required
                   type="text"
-                  name='first name'
-                  id='first name'
+                name='firstName'
+                id='firstName'
+                value={formData.firstName}
+                onChange={handleChange}
                   placeholder='Enter First Name' />
 
                   <label htmlFor="fullname" className='block text-sm pb-2 mt-3'>Last Name</label>
                   <input className='border-2 border-gray-500 p-3 text-black rounded-md focus:border-red-500 focus:ring-red-500 w-full'
                   type="text"
                   required
-                  name='lastname'
-                  id='last name'
+                name='lastName'
+                id='lastName'
+                value={formData.lastName}
+                onChange={handleChange}
                   placeholder='Enter Last Name' />
 
               </div>
@@ -78,6 +115,8 @@ function Profile() {
                   required
                   name='address1'
                   id='address1'
+                value={formData.address1}
+                onChange={handleChange}
                   placeholder='Enter Address1' />
               </div>
               {/* Address2 */}
@@ -89,6 +128,8 @@ function Profile() {
                   type="text"
                   name='address2'
                   id='address2'
+                value={formData.address2}
+                onChange={handleChange}
                   placeholder='Enter Address2' />
               </div>
               {/* City */}
@@ -101,6 +142,8 @@ function Profile() {
 
                   name='city'
                   id='city'
+                value={formData.city}
+                onChange={handleChange}
                   placeholder='Enter City' />
               </div>
               {/* State */}
@@ -127,6 +170,8 @@ function Profile() {
                   required
 
                   id='zip'
+                value={formData.zip}
+                onChange={handleChange}
                   placeholder='Enter Zip Code' />
               </div>
               {/* Save button */}

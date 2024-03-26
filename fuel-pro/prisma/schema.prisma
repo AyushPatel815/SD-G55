@@ -67,15 +67,16 @@ model User {
   id       String    @id @default(uuid())
   username String    @unique
   password String
-  profile  Profile[]
+  profile  Profile?
   sessions Session[]
   quotes   Quote[]
 }
 
 model Profile {
   clientUsername String  @id
-  fullName       String?
-  email          String  @unique
+  firstName       String?
+  lastName       String?
+  // email          String  @unique
   address1       String?
   address2       String?
   city           String?
