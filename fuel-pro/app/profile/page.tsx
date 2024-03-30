@@ -1,4 +1,5 @@
 "use client"
+
 import React, { useEffect, useState } from 'react'
 
 import NavBar from '../components/NavBar'
@@ -11,7 +12,7 @@ import axios from 'axios'; // Import Axios
 
 
 function Profile() {
-  const [screenWidth, setScreenWidth] = useState<number>(0);
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -30,12 +31,11 @@ function Profile() {
     }));
   };
 
-  const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Form data:', formData);
     try {
-      // Make a POST request to the backend API route
-      const response = await axios.post('/api/profile/profile', { profile: formData });
+    const response = await axios.post('http://localhost:4000/profile', { profile: formData });
       console.log('Profile saved successfully:', response.data);
     } catch (error) {
       console.error('Error saving profile:', error);
@@ -43,27 +43,8 @@ function Profile() {
   };
 
 
-  useEffect(() => {
-    // Function to update screenWidth when the window is resized
-    const handleResize = () => {
-      setScreenWidth(window.innerWidth);
-    };
 
-    // Set initial screenWidth
-    setScreenWidth(window.innerWidth);
 
-    // Add event listener for window resize
-    window.addEventListener('resize', handleResize);
-
-    // Remove event listener on component unmount
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []); // Empty dependency array ensures that the effect runs only once
-
-  // Calculate dynamic width and height based on screen size
-  const dynamicWidth = Math.min(screenWidth, 2600); // You can adjust the maximum width as needed
-  const dynamicHeight = (9 / 16) * dynamicWidth; // Assuming a 16:9 aspect ratio
   return (
 
     <div>
@@ -78,7 +59,7 @@ function Profile() {
       
           {/* <main className='h-screen flex items-center justify-center bg-gradient-to-br from-blue-400 to-indigo-300 '> */}
       
-        <form className='bg-orange-100 flex justify-center ml-[35%] mt-[7%] items-center backdrop-blur-md rounded-lg w-[60%] sm:w-[50%] md:w-[40%] lg:w-[30%] xl:w-[25%] border bg-transparent border-yellow-50 shadow-lg' action="">
+      <form className='bg-orange-100 flex justify-center ml-[35%] mt-[7%] items-center backdrop-blur-md rounded-lg w-[60%] sm:w-[50%] md:w-[40%] lg:w-[30%] xl:w-[25%] border bg-transparent border-yellow-50 shadow-lg' action="" onSubmit={handleSubmit}>
           <div className='max-w-full border w-full rounded-2xl text-yellow-50 font-semibold text-left p-8'>
             <h1 className='text-3xl font-bold mb-4'>Profile</h1>
             <p className=' mb-6 text-xl'>Edit your profile</p>
@@ -192,3 +173,7 @@ function Profile() {
 }
 
 export default Profile
+function setScreenWidth(innerWidth: number) {
+  throw new Error('Function not implemented.');
+}
+

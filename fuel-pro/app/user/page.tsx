@@ -1,80 +1,67 @@
-'use client';
-import React, { useState } from 'react';
-import axios from 'axios';
-import { redirect } from 'next/navigation';
+// // Login.js
+// 'use client';
+// import React, { useState } from 'react';
+// import axios from 'axios';
+// import { redirect } from 'next/navigation';
 
-import { PrismaClient } from '@prisma/client';
+// function Login() {
+//     const [formData, setFormData] = useState({ username: '', password: '' });
+//     const [error, setError] = useState<string | null>(null);
+//     const [isValidUser, setIsValidUser] = useState<boolean>(false);
+//     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
-const prisma = new PrismaClient();
+//     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//         const { name, value } = e.target;
+//         setFormData(prevState => ({
+//             ...prevState,
+//             [name]: value
+//         }));
+//     };
 
-function Login() {
-    const [formData, setFormData] = useState({ username: '', password: '' });
-    const [error, setError] = useState<string | null>(null);
-    const [isValidUser, setIsValidUser] = useState<boolean>(false);
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-    
+//     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+//         e.preventDefault();
+//         console.log(formData)
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
-    };
+//         try {
+//             const response = await axios.post("http://localhost:4000/user", formData);
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+//             console.log('Login successful:', response.data);
+//             console.log('Response:', response); // Log the response object
+//             console.log('Data:', response.data); // Log the data property of the response
+//             setFormData({ username: '', password: '' });
+//             setError(null);
+//             setIsValidUser(true);
+//             setIsLoggedIn(true);
+//             redirect('/dashboard'); // Redirect to the dashboard
+//         } catch (error: any) {
+//             console.error('Error during login:', error);
+//             setError(error.response.data.error);
+//             setIsValidUser(false);
+//         }
+//     };
 
-        console.log('Form data:', formData);
-        // const user = await prisma.user.findMany()
-        // return{
-        //     props:{
-        //         allUser: user
-        //     }
-        // }
-        try {
-            // Make a POST request to the backend API route
-            // const response = await axios.post('/api/user/index', formData);
-            const response = await axios.post("/api/user/index", formData);
+//     if (isLoggedIn) {
+//         return redirect('/dashboard'); // Redirect if logged in
+//     }
 
-            console.log('Login successful:', response.data);
-            // Reset form data and error state after successful login
-            setFormData({ username: '', password: '' });
-            setError(null);
-            setIsValidUser(true);
-            setIsLoggedIn(true); // Update isLoggedIn state to true after successful login
-            return redirect('/dashboard');
+//     return (
+//         <div>
+//             <h1>Login</h1>
+//             {isValidUser && <p>Valid user</p>}
+//             {error && <p>Error: {error}</p>}
+//             <form onSubmit={handleSubmit}>
+//                 <div>
+//                     <label htmlFor="username">Username:</label>
+//                     <input type="text" id="username" name="username" value={formData.username} onChange={handleChange} />
+//                 </div>
+//                 <div>
+//                     <label htmlFor="password">Password:</label>
+//                     <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} />
+//                 </div>
+//                 <button type="submit">Login</button>
+//             </form>
+//         </div>
+//     );
+// }
 
-        } catch (error: any) {
-            console.error('Error during login:', error);
-            // Set error state with the error message
-            setError(error.response.data.message);
-            setIsValidUser(false);
-        }
-    };
-
-    if (isLoggedIn) {
-        return redirect('/dashboard');
-    }
-
-    return (
-        <div>
-            <h1>Login</h1>
-            {isValidUser && <p>Valid user</p>}
-            {error && <p>Error: {error}</p>}
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="username">Username:</label>
-                    <input type="text" id="username" name="username" value={formData.username} onChange={handleChange} />
-                </div>
-                <div>
-                    <label htmlFor="password">Password:</label>
-                    <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} />
-                </div>
-                <button type="submit">Login</button>
-            </form>
-        </div>
-    );
-}
-
-export default Login;
+// export default Login;

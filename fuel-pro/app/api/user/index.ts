@@ -7,6 +7,8 @@ const prisma = new PrismaClient({ log: ['query'] });
 
 // Define the main async function to handle incoming requests
 async function main(req: NextApiRequest, res: NextApiResponse) {
+
+    
     try {
         // Extract username and password from the request body
         if (req.method === 'POST') {

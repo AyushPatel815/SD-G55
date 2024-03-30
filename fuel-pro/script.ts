@@ -29,7 +29,46 @@ async function main() {
 
     //     }
 
-
+    
+        // Create a new user
+        const newUser = await prisma.user.create({
+          data: {
+            username: 'Ayush',
+            password: 'Ayush1920',
+            // Add other fields as needed
+          },
+        });
+    
+        // Create a new profile for the user
+        const newProfile = await prisma.profile.create({
+          data: {
+            clientUsername: newUser.username,
+            firstName: 'Ayush',
+            lastName: 'Patel',
+            // Add other fields as needed
+            address1:  '815 Starcross Bend Dr',
+            address2: '',
+            city: 'Missouri City',
+            state: 'Texas',
+            zipcode: '77459'
+          },
+        });
+    
+        // Create a new quote
+        const newQuote = await prisma.quote.create({
+          data: {
+            clientUsername: newUser.username,
+            gallons: 100,
+            price: 200.50,
+            address: '815 Starcross Bend Dr',
+            city: 'Missouri City',
+            state: 'Tx',
+            zipcode: '77459',
+            // Add other fields as needed
+          },
+        });
+    
+    
     // });
     // const updatedQuote = await prisma.quote.create({
     //     where: { clientUsername: user.clientUsername },
@@ -52,16 +91,16 @@ async function main() {
     //     }
     // });
 
-    const user = await prisma.user.findUnique({
-        where: {
-            username: "Ayush" // Replace "username_here" with the actual username
-        }
-    });
+    // const user = await prisma.user.findUnique({
+    //     where: {
+    //         username: "Ayush" // Replace "username_here" with the actual username
+    //     }
+    // });
 
-    if (!user) {
-        console.error("User not found");
-        return;
-    }
+    // if (!user) {
+    //     console.error("User not found");
+    //     return;
+    // }
 
     // Create the second quote entry
     // const secondQuote = await prisma.quote.create({
@@ -82,24 +121,24 @@ async function main() {
 
 }
 
-async function fetchData() {
-    try {
-        // Fetch data from the database
-        const users = await prisma.user.findMany();
-        const profiles = await prisma.profile.findMany();
-        // const quotes = await prisma.quote.findMany();
+// async function fetchData() {
+//     try {
+//         // Fetch data from the database
+//         const users = await prisma.user.findMany();
+//         const profiles = await prisma.profile.findMany();
+//         // const quotes = await prisma.quote.findMany();
 
-        // Do something with the fetched data
-        console.log("Users:", users);
-        console.log("Profiles:", profiles);
-        // console.log("Quotes:", quotes);
-    } catch (error) {
-        console.error("Error fetching data:", error);
-    } finally {
-        // Disconnect Prisma Client
-        await prisma.$disconnect();
-    }
-}
+//         // Do something with the fetched data
+//         console.log("Users:", users);
+//         console.log("Profiles:", profiles);
+//         // console.log("Quotes:", quotes);
+//     } catch (error) {
+//         console.error("Error fetching data:", error);
+//     } finally {
+//         // Disconnect Prisma Client
+//         await prisma.$disconnect();
+//     }
+// }
 
 
 main()
@@ -112,7 +151,7 @@ main()
     });
 
 
-fetchData()
+// fetchData()
 
 
 

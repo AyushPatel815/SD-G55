@@ -67,7 +67,7 @@ model User {
   id       String    @id @default(uuid())
   username String    @unique
   password String
-  profile  Profile?
+  profile  Profile[]
   sessions Session[]
   quotes   Quote[]
 }
