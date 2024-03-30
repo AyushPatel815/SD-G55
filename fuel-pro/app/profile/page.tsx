@@ -13,7 +13,54 @@ import axios from 'axios'; // Import Axios
 
 function Profile() {
 
+  const [screenWidth, setScreenWidth] = useState<number>(0);
+
+  useEffect(() => {
+    // Function to update screenWidth when the window is resized
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
+
+    // Set initial screenWidth
+    setScreenWidth(window.innerWidth);
+
+    // Add event listener for window resize
+    window.addEventListener('resize', handleResize);
+
+    // Remove event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []); // Empty dependency array ensures that the effect runs only once
+
+  // Calculate dynamic width and height based on screen size
+  const dynamicWidth = Math.min(screenWidth, 2600); // You can adjust the maximum width as needed
+  const dynamicHeight = (9 / 16) * dynamicWidth; // Assuming a 16:9 aspect ratio
+
+  const inputcss = 'border-2 border-gray-500 p-1  text-black rounded-md focus:border-red-500 focus:ring-red-500 w-full sm:p-3'
+
+
   const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    address1: '',
+    address2: '',
+    city: '',
+    state: '',
+    zip: ''
+  });
+
+  type FormErrors = {
+    firstName: string;
+    lastName: string;
+    address1: string;
+    address2: string;
+    city: string;
+    state: string;
+    zip: string;
+  };
+
+  const [errors, setErrors] = useState<FormErrors>({
     firstName: '',
     lastName: '',
     address1: '',
@@ -42,7 +89,33 @@ function Profile() {
     }
   };
 
+  const validateInput = (name: string, value: string) => {
+    switch (name) {
+      case 'firstName':
+        return value.trim().length > 1 && value.trim().length <= 50 ? '' : 'Invalid name (maximum 50 characters)';
+      case 'lastName':
+        return value.trim().length > 1 && value.trim().length <= 50 ? '' : 'Invalid name (maximum 50 characters)';
+      case 'address1':
+        return value.trim().length > 1 && value.trim().length <= 100 ? '' : 'Invalid address';
+      case 'city':
+        return value.trim().length > 1 && value.trim().length <= 100 ? '' : 'Invalid city';
+      // case 'state':
+      //   return value ? '' : 'Please select a state';
+      case 'zip':
+        return /^\d{5,9}$/.test(value) ? '' : 'Invalid zip code (5-9 characters)';
+      default:
+        return '';
+    }
+  };
 
+  const handleSelectState = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newState = e.target.value;
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+    console.log(`Selected state: ${newState}`);
+    // You can perform any additional actions with the selected state here
+  };
+
+  
 
 
   return (
