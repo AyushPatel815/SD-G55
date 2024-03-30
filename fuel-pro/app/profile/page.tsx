@@ -263,13 +263,13 @@ const [errors, setErrors] = useState<FormErrors>({
   
   
   
-  // const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
+ /*  // const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
   //   e.preventDefault();
   //   // input validation 
   //   console.log(formData)
   //   // send the updated answer to the backend
 
-  // }
+  // } */
 
   return (
     <div>

@@ -1,53 +1,76 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import NavBar from '../components/NavBar'
-import { redirect } from 'next/navigation'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button';
-import { LucideGavel } from 'lucide-react'
+// import { redirect } from 'next/navigation'
+// import { Input } from '@/components/ui/input'
+// import { Button } from '@/components/ui/button';
+// import { LucideGavel } from 'lucide-react'
 import Image from 'next/image'
+import Background_img from "../../public/dashboard-img.png"
 
 
 function page() {
 
-  const [formFields, setFormFields] = useState([
-    { id: 'GallonsRequested', label: 'Gallons Requested', type: 'text', placeholder: 'Enter number of Gallons' },
-    { id: 'DeliveryAddress', label: 'Delivery Address', type: 'label', placeholder: 'Enter delivery address' },
-    { id: 'DeliveryDate', label: 'Delivery Date', type: 'date', placeholder: 'Select a date' },
-    { id: 'Price', label: 'Suggested Price per Gallon', type: 'text', placeholder: 'Enter suggested price per gallon' },
-  ]);
+  // for the background image
+  const [screenWidth, setScreenWidth] = useState<number>(0);
 
-  const handleSubmit = (e:React.ChangeEvent<HTMLFormElement>) => {
-   e.preventDefault();
+  useEffect(() => {
+    // Function to update screenWidth when the window is resized
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
 
-   if(isNaN(Number(gallons)) || Number(gallons) <= 0)
-   {
-    setError("Invalid Input")
-    return
-   }
+    // Set initial screenWidth
+    setScreenWidth(window.innerWidth);
 
-   setError("")
-   console.log(gallons,date)
-  }
+    // Add event listener for window resize
+    window.addEventListener('resize', handleResize);
 
-  const[gallons, setGallons] = useState("");
-  const[date,setDate] = useState("");
+    // Remove event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []); // Empty dependency array ensures that the effect runs only once
+
+  // Calculate dynamic width and height based on screen size
+  const dynamicWidth = Math.min(screenWidth, 2600); // You can adjust the maximum width as needed
+  const dynamicHeight = (9 / 16) * dynamicWidth; // Assuming a 16:9 aspect ratio
+
+  const [gallons, setGallons] = useState("");
+  const [date, setDate] = useState("");
   const [error, setError] = useState("");
 
+  const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
+    if (isNaN(Number(gallons)) || Number(gallons) <= 0) {
+      setError("Invalid Input")
+      return
+    } else {
+
+      setError("")
+      // send to backend
+      console.log(gallons, date)
+    }
+  }
   return (
     <div>
 
       <div>
-      <NavBar />
+        <NavBar />
       </div>
 
-      <Image
+      {/* <Image
         className='absolute inset-0 object-cover object-center z-[-1]' // Changed z-index to -1 to ensure it's behind the form
         src='/dashboard-img.png'
         alt='Dashboard background'
         layout="fill" // Image should fill the parent div
-      />
+      /> */}
+      <div className='relative'>
+        <Image className='fixed inset-0 h-screen w-screen object-cover object-center z-[-50] brightness-[65%]'
+          src={Background_img}
+          alt={''} width={600} height={600}></Image>
+      </div>
 
       <div className='flex items-center justify-center h-screen w-screen]'>
         {/* form begins here */}
@@ -98,6 +121,7 @@ function page() {
               min={new Date().toISOString().split('T')[0]}
               value={date}
               onChange={(event) => setDate(event.target.value)}
+              required
             />
           </div>
 
@@ -108,8 +132,8 @@ function page() {
             </label>
             <div
               className='text-black-600 text-m min=0 border-2 border-gray-500 p-2 rounded-md focus:border-red-500 focus:ring-red-500 w-1/2 ml-7 mt-2'
-> Price
-          </div>
+            > Price
+            </div>
           </div>
 
           {/*submit button  */}
