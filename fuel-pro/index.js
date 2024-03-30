@@ -360,7 +360,46 @@ app.get('/profile', async (req, res) => {
 
 
 
+app.post('/signup', async (req, res) => {
+    const { username, password } = req.body;
 
+    try {
+        // Check if the user already exists
+        const existingUser = await prisma.user.findUnique({
+            where: {
+                username: username,
+            },
+        });
+
+        if (existingUser) {
+            return res.status(400).json({ error: 'User already exists.' });
+        }
+
+        // Create the new user
+        const newUser = await prisma.user.create({
+            data: {
+                username: username,
+                password: password,
+            },
+        });
+
+        // Save the session
+        req.session.authenticated = true;
+        req.session.loggedIn = true;
+        req.session.user = {
+            id: newUser.id,
+            username: newUser.username,
+        };
+        await req.session.save();
+
+        console.log('New user created:', newUser);
+
+        res.json(req.session.user); // Sending response here
+    } catch (error) {
+        console.error('Error creating user:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
 
 

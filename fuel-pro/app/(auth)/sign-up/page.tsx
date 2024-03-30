@@ -18,7 +18,35 @@ function SignUp() {
     //     return redirect('/dashboard');
     // }
 
+    const [formData, setFormData] = useState({ username: '', password: '' });
+    const [error, setError] = useState<string | null>(null);
+    const [isSignedUp, setIsSignedUp] = useState<boolean>(false); // Change state name to reflect signup status
 
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        console.log(formData);
+
+        try {
+            const response = await axios.post("http://localhost:4000/signup", formData);
+
+            console.log('Signup successful:', response.data);
+            setFormData({ username: '', password: '' });
+            setError(null);
+            setIsSignedUp(true); // Update state to reflect signup success
+
+        } catch (error: any) {
+            console.error('Error during signup:', error);
+            setError(error.response.data.error);
+        }
+    };
 
     if (isSignedUp) {
         return redirect('/profile'); // Redirect to dashboard after successful signup
