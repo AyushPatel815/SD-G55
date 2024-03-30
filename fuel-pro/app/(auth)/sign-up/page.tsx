@@ -1,5 +1,6 @@
+'use client';
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import Link from 'next/link'
@@ -8,21 +9,56 @@ import { authOptions } from '@/app/utils/auth'
 import { redirect } from 'next/navigation'
 import GithubSignInButton from '@/app/components/GithubSignInButton'
 import GoogleSignInButton from '@/app/components/GoogleSignInButton'
+import axios from 'axios'
 
-async function SignUp() {
+function SignUp() {
     // const session = await getServerSession(authOptions);
 
     // if(session){
     //     return redirect('/dashboard');
     // }
 
+    const [formData, setFormData] = useState({ username: '', password: '' });
+    const [error, setError] = useState<string | null>(null);
+    const [isSignedUp, setIsSignedUp] = useState<boolean>(false); // Change state name to reflect signup status
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        console.log(formData);
+
+        try {
+            const response = await axios.post("http://localhost:4000/signup", formData);
+
+            console.log('Signup successful:', response.data);
+            setFormData({ username: '', password: '' });
+            setError(null);
+            setIsSignedUp(true); // Update state to reflect signup success
+
+        } catch (error: any) {
+            console.error('Error during signup:', error);
+            setError(error.response.data.error);
+        }
+    };
+
+    if (isSignedUp) {
+        return redirect('/profile'); // Redirect to dashboard after successful signup
+    }
+
     return (
         <div className=' mt-24 rounded bg-black/70 py-10 px-6 md:mt-0 md:max-w-sm md:px-14 '>
-            <form action="">
+            <form onSubmit={handleSubmit}>
                 <h1 className=' text-3xl font-semibold text-white'>Sign up</h1>
                 <div className=' space-y-4 mt-5'>
-                    <Input type='email' name='email' placeholder='Email' className=' bg-[#333] placeholder:text-xs placeholder:text-gray-400 w-full inline-block' />
-                    <Input type='password' name='password' placeholder='password' className=' bg-[#333] placeholder:text-xs placeholder:text-gray-400 w-full inline-block' />
+                    <Input type='username' name='username' placeholder='username' className=' bg-[#333] placeholder:text-xs placeholder:text-gray-400 w-full inline-block' required onChange={handleChange}/>
+                    <Input type='password' name='password' placeholder='password' className=' bg-[#333] placeholder:text-xs placeholder:text-gray-400 w-full inline-block' required onChange={handleChange}/>
                     <Button type='submit' variant='destructive' className=' w-full text-black bg-[#bbb9b9] hover:bg-slate-500'>Sign up</Button>
                 </div>
             </form>
