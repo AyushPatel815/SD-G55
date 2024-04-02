@@ -13,38 +13,39 @@ import axios from 'axios'; // Import Axios
 
 function Profile() {
 
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    address1: '',
-    address2: '',
-    city: '',
-    state: '',
-    zip: ''
-  });
+  // const [formData, setFormData] = useState({
+  //   firstName: '',
+  //   lastName: '',
+  //   address1: '',
+  //   address2: '',
+  //   city: '',
+  //   state: '',
+  //   zip: ''
+  // });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-  };
-
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-    const response = await axios.post('http://localhost:4000/profile', { profile: formData });
-      console.log('Profile saved successfully:', response.data);
-    } catch (error) {
-      console.error('Error saving profile:', error);
-    }
-  };
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   setFormData(prevState => ({
+  //     ...prevState,
+  //     [name]: value
+  //   }));
+  // };
 
 
+  // const handleSubmit4 = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   console.log(formData);
+  //   try {
+  //   const response = await axios.post('http://localhost:4000/profile', { profile: formData });
+  //     console.log('Profile saved successfully:', response.data);
+  //   } catch (error) {
+  //     console.error('Error saving profile:', error);
+  //   }
+  // };
 
-  const inputcss = 'border-2 border-gray-500 p-1  text-black rounded-md focus:border-red-500 focus:ring-red-500 w-full sm:p-3'
+
+
+  
 
   /* // state for inputs
   // const [formData, setFormData] = useState({
@@ -155,9 +156,9 @@ const [errors, setErrors] = useState<FormErrors>({
       state: validateInput('state', value)
     });
   }; 
-
+*/
   // handel submit
-  // const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
+  // const handleSubmit2 = (e: React.ChangeEvent<HTMLFormElement>) => {
   //   e.preventDefault();
 
   //   // Validate all fields before submitting
@@ -173,10 +174,16 @@ const [errors, setErrors] = useState<FormErrors>({
   //   if (isValid) {
   //     console.log('Form submitted:', formData);
   //     // Send the updated answer to the backend
+  //       try {
+  //         const response = await axios.post('http://localhost:4000/profile', { profile: formData });
+  //           console.log('Profile saved successfully:', response.data);
+  //         } catch (error) {
+  //           console.error('Error saving profile:', error);
+  //         }
   //   } else {
   //     console.log('Form contains errors. Please fix them before submitting.');
   //   }
-  // }; */
+  // }; 
   
   // states
   // const [selectedState, setSelectedState] = useState<string>('');
@@ -185,7 +192,6 @@ const [errors, setErrors] = useState<FormErrors>({
     const newState = e.target.value;
     setFormData({ ...formData, [e.target.name]: e.target.value })
     console.log(`Selected state: ${newState}`);
-    // You can perform any additional actions with the selected state here
   };
   
   const usStates = [
@@ -245,32 +251,39 @@ const [errors, setErrors] = useState<FormErrors>({
   // handel changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    // console.log('change', e.target.value)
   }
   
   
-//   const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
-//     e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
   
-//     // Validate all fields before submitting
-//     const formErrors: FormErrors = {} as FormErrors; // Specify the type explicitly
-//     Object.keys(formData).forEach((key) => {
-//       formErrors[key as keyof FormErrors] = validateInput(key, formData[key as keyof FormData]);
-//     });
-//     setErrors(formErrors);
+    // Validate all fields before submitting
+    const formErrors: FormErrors = {} as FormErrors; // Specify the type explicitly
+    Object.keys(formData).forEach((key) => {
+      formErrors[key as keyof FormErrors] = validateInput(key, formData[key as keyof FormData]);
+    });
+    setErrors(formErrors);
   
-//     // Check if there are any errors
-//     const isValid = Object.values(formErrors).every((error) => !error.trim());
-  
-//     if (isValid) {
-//       console.log('Form submitted:', formData);
-//       // Send the updated answer to the backend
-//       // submiting to the backend
+    // Check if there are any errors
+    const isValid = Object.values(formErrors).every((error) => !error.trim());
+    
+    if (isValid) {
+      console.log('Form submitted:', formData);
+      // Send the updated answer to the backend
+      // submiting to the backend
+      try {
+        const response = await axios.post('http://localhost:4000/profile', { profile: formData });
+          console.log('Profile saved successfully:', response.data);
+        } catch (error) {
+          console.error('Error saving profile:', error);
+        }
 
-//     } else {
-//       console.log('Form contains errors. Please fix them before submitting.');
-//     }
-  };
-  
+    } else {
+      console.log('Form contains errors. Please fix them before submitting.');
+    }
+
+  }
   
   
   
@@ -281,7 +294,7 @@ const [errors, setErrors] = useState<FormErrors>({
   //   // send the updated answer to the backend
 
   // } */
-
+  const inputcss = 'border-2 border-gray-500 p-1  text-black rounded-md focus:border-red-500 focus:ring-red-500 w-full sm:p-3'
   return (
     <div>
 
@@ -293,110 +306,55 @@ const [errors, setErrors] = useState<FormErrors>({
           alt={''} width={600} height={600}></Image>
       </div>
 
-      
-          {/* <main className='h-screen flex items-center justify-center bg-gradient-to-br from-blue-400 to-indigo-300 '> */}
-      
-      <form className='bg-orange-100 flex justify-center ml-[35%] mt-[7%] items-center backdrop-blur-md rounded-lg w-[60%] sm:w-[50%] md:w-[40%] lg:w-[30%] xl:w-[25%] border bg-transparent border-yellow-50 shadow-lg' action="" onSubmit={handleSubmit}>
-          <div className='max-w-full border w-full rounded-2xl text-yellow-50 font-semibold text-left p-8'>
-            <h1 className='text-3xl font-bold mb-4'>Profile</h1>
-            <p className=' mb-6 text-xl'>Edit your profile</p>
-            <div>
-              {/* Full Name */}
-              <div className='pb-4 text-sm'>
-                <label htmlFor="fullname" className='block text-sm pb-2'>First Name</label>
-                <input className='border-2 border-gray-500 p-3 text-black rounded-md focus:border-red-500 focus:ring-red-500 w-full'
-                required
-                  type="text"
-                name='firstName'
-                id='firstName'
-                value={formData.firstName}
-                onChange={handleChange}
-                  placeholder='Enter First Name' />
 
-                  <label htmlFor="fullname" className='block text-sm pb-2 mt-3'>Last Name</label>
-                  <input className='border-2 border-gray-500 p-3 text-black rounded-md focus:border-red-500 focus:ring-red-500 w-full'
-                  type="text"
-                  required
-                name='lastName'
-                id='lastName'
-                value={formData.lastName}
-                onChange={handleChange}
-                  placeholder='Enter Last Name' />
+      {/* <main className='h-screen flex items-center justify-center bg-gradient-to-br from-blue-400 to-indigo-300 '> */}
 
-              </div>
-              {/* Address1 */}
-              <div className='pb-4'>
-                <label htmlFor="address1" className='block text-sm pb-2'>Address1</label>
-
-                <input className='border-2 border-gray-500 text-black p-3 rounded-md focus:border-red-500 focus:ring-red-500 w-full'
-                  type="text"
-                  required
-                  name='address1'
-                  id='address1'
-                value={formData.address1}
-                onChange={handleChange}
-                  placeholder='Enter Address1' />
-              </div>
-              {/* Address2 */}
-              <div className='pb-4'>
-                <label htmlFor="address2" className='block text-sm pb-2'>Address2</label>
-
-
-      {/* <form className='bg-orange-100 flex justify-center ml-[35%] mt-[7%] items-center backdrop-blur-md rounded-lg w-[60%] sm:w-[50%] md:w-[40%] lg:w-[30%] xl:w-[25%] border bg-transparent border-yellow-50 shadow-lg' action=""> */}
       <div className='flex justify-center  items-center'>
-        <form className=' border backdrop-blur-md rounded-2xl text-yellow-50 text-base font-semibold p-4 mt-10 sm:w-[400px] sm:p-8 ' onSubmit={handleSubmit} action={'/'}>
-          <h1 className=' text-2xl sm:text-3xl font-bold mb-4'>Profile</h1>
-          <p className=' mb-6 text-sm sm:text-xl'>Edit your profile</p>
+        <form className=' border backdrop-blur-md rounded-2xl text-yellow-50 text-base font-semibold p-4 mt-10 sm:w-[400px] sm:p-8 ' onSubmit={handleSubmit} action=''>
+          <h1 className='text-3xl font-bold mb-4'>Profile</h1>
+          <p className=' mb-6 text-xl'>Edit your profile</p>
           <div className='text-base'>
             {/* Full Name */}
             <div className='pb-4 text-sm'>
               <label htmlFor="firstName" className='block text-sm pb-2'>First Name</label>
-              {/* <input className='border-2 border-gray-500 p-1  text-black rounded-md focus:border-red-500 focus:ring-red-500 w-full sm:p-3' */}
-              <input className={inputcss}
+              <input className='border-2 border-gray-500 p-3 text-black rounded-md focus:border-red-500 focus:ring-red-500 w-full'
                 required
                 type="text"
                 name='firstName'
                 id='firstName'
-                placeholder='Enter First Name'
                 value={formData.firstName}
                 onChange={handleChange}
-              />
+                placeholder='Enter First Name' />
               {errors.firstName && <p className=' text-red-500'>{errors.firstName}</p>}
-                  type="text"
-                  name='address2'
-                  id='address2'
-                value={formData.address2}
+             {/* Last Name */}
+             <label htmlFor="lastName" className='block text-sm pb-2 mt-3'>Last Name</label>
+              <input className='border-2 border-gray-500 p-3 text-black rounded-md focus:border-red-500 focus:ring-red-500 w-full'
+                type="text"
+                required
+                name='lastName'
+                id='lastName'
+                value={formData.lastName}
                 onChange={handleChange}
-                  placeholder='Enter Address2' />
-              </div>
-              {/* City */}
-              <div className='pb-4'>
-                <label htmlFor="city" className='block text-sm pb-2'>City</label>
-
+                placeholder='Enter Last Name' />
+              {errors.lastName && <p className=' text-red-500'>{errors.lastName}</p>}
             </div>
             {/* Address1 */}
             <div className='pb-4'>
               <label htmlFor="address1" className='block text-sm pb-2'>Address1</label>
 
-                  name='city'
-                  id='city'
-                value={formData.city}
+              <input className='border-2 border-gray-500 text-black p-3 rounded-md focus:border-red-500 focus:ring-red-500 w-full'
+                type="text"
+                required
+                name='address1'
+                id='address1'
+                value={formData.address1}
                 onChange={handleChange}
-                  placeholder='Enter City' />
-              </div>
-              {/* State */}
-              <div className='pb-4'>
-                {/* <label htmlFor="state" className='block text-sm pb-2'>State</label>
-                <select name="state" id="state" className='border-2 border-gray-500 p-3 rounded-md focus:border-red-500 focus:ring-red-500 w-full'>
-                  <option value="TX">Texas</option>
-                  <option value="FL">Florida</option>
-                  <option value="CA">California</option>
-                </select> */}
-
-                
-                <State />
-               
-
+                placeholder='Enter Address1' />
+                {errors.address1 && <p className=' text-red-500'>{errors.address1}</p>}
+            </div>
+            {/* Address2 */}
+            <div className='pb-4'>
+              <label htmlFor="address2" className='block text-sm pb-2'>Address2</label>
 
               <input className={inputcss}
                 type="text"
@@ -405,8 +363,8 @@ const [errors, setErrors] = useState<FormErrors>({
                 placeholder='Enter Address 2'
                 value={formData.address2}
                 onChange={handleChange}
-                />
-                {errors.address1 && <p className=' text-red-500'>{errors.address2}</p>}
+              />
+              {errors.address2 && <p className=' text-red-500'>{errors.address2}</p>}
             </div>
             {/* City */}
             <div className='pb-4'>
@@ -415,15 +373,17 @@ const [errors, setErrors] = useState<FormErrors>({
               <input className={inputcss}
                 type="text"
                 required
-
-
-                  id='zip'
-                value={formData.zip}
-                onChange={handleChange}
-                  placeholder='Enter Zip Code' />
-              </div>
-              {/* Save button */}
-
+                name='city'
+                id='city'
+                placeholder='Enter City'
+                value={formData.city}
+                onChange={handleChange} />
+              {errors.city && <p className=' text-red-500'>{errors.city}</p>}
+            </div>
+            {/* State */}
+            <div className='pb-4'>
+              {/* value={formData.state}
+                onChange={handleChange} */}
               <div>
                 <label htmlFor="state" className='block text-sm pb-2'>State</label>
                 <select
@@ -457,7 +417,7 @@ const [errors, setErrors] = useState<FormErrors>({
                 placeholder='Enter Zip Code'
                 value={formData.zip}
                 onChange={handleChange} />
-                {errors.zip && <p className=' text-red-500'>{errors.zip}</p>}
+              {errors.zip && <p className=' text-red-500'>{errors.zip}</p>}
             </div>
             {/* Save button */}
             <div>
@@ -470,12 +430,11 @@ const [errors, setErrors] = useState<FormErrors>({
       </div>
 
     </div>
-
   )
 }
 
 export default Profile
-function setScreenWidth(innerWidth: number) {
-  throw new Error('Function not implemented.');
-}
+// function setScreenWidth(innerWidth: number) {
+//   throw new Error('Function not implemented.');
+// }
 
