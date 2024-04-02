@@ -13,117 +13,50 @@ import axios from 'axios'; // Import Axios
 
 function Profile() {
 
-  // const [formData, setFormData] = useState({
-  //   firstName: '',
-  //   lastName: '',
-  //   address1: '',
-  //   address2: '',
-  //   city: '',
-  //   state: '',
-  //   zip: ''
-  // });
-
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target;
-  //   setFormData(prevState => ({
-  //     ...prevState,
-  //     [name]: value
-  //   }));
-  // };
-
-
-  // const handleSubmit4 = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   console.log(formData);
-  //   try {
-  //   const response = await axios.post('http://localhost:4000/profile', { profile: formData });
-  //     console.log('Profile saved successfully:', response.data);
-  //   } catch (error) {
-  //     console.error('Error saving profile:', error);
-  //   }
-  // };
-
-
-
-  
-
-  /* // state for inputs
-  // const [formData, setFormData] = useState({
-  //   firstName: '',
-  //   lastName: '',
-  //   address1: '',
-  //   address2: '',
-  //   city: '',
-  //   state: '',
-  //   zip: ''
-  // });
-
-  // // state for errors in input
-  // const [errors, setErrors] = useState({
-  //   firstName: '',
-  //   lastName: '',
-  //   address1: '',
-  //   city: '',
-  //   state: '',
-  //   zip: ''
-  // }); */
 
   // Define types for form data and errors
-type FormData = {
-  firstName: string;
-  lastName: string;
-  address1: string;
-  address2: string;
-  city: string;
-  state: string;
-  zip: string;
-};
+  type FormData = {
+    firstName: string;
+    lastName: string;
+    address1: string;
+    address2: string;
+    city: string;
+    state: string;
+    zip: string;
+  };
 
-type FormErrors = {
-  firstName: string;
-  lastName: string;
-  address1: string;
-  address2: string;
-  city: string;
-  state: string;
-  zip: string;
-};
+  type FormErrors = {
+    firstName: string;
+    lastName: string;
+    address1: string;
+    address2: string;
+    city: string;
+    state: string;
+    zip: string;
+  };
 
-// Initialize state with explicit types
-const [formData, setFormData] = useState<FormData>({
-  firstName: '',
-  lastName: '',
-  address1: '',
-  address2: '',
-  city: '',
-  state: '',
-  zip: ''
-});
+  // Initialize state with explicit types
+  const [formData, setFormData] = useState<FormData>({
+    firstName: '',
+    lastName: '',
+    address1: '',
+    address2: '',
+    city: '',
+    state: '',
+    zip: ''
+  });
 
-const [errors, setErrors] = useState<FormErrors>({
-  firstName: '',
-  lastName: '',
-  address1: '',
-  address2: '',
-  city: '',
-  state: '',
-  zip: ''
-});
+  const [errors, setErrors] = useState<FormErrors>({
+    firstName: '',
+    lastName: '',
+    address1: '',
+    address2: '',
+    city: '',
+    state: '',
+    zip: ''
+  });
 
-  /* const handleChangeError = (e:React.ChangeEvent<HTMLFormElement>) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-
-    // Validate the input and update errors state
-    setErrors({
-      ...errors,
-      [name]: validateInput(name, value)
-    });
-  }; */
-
+  // input validation
   const validateInput = (name: string, value: string) => {
     switch (name) {
       case 'firstName':
@@ -143,57 +76,7 @@ const [errors, setErrors] = useState<FormErrors>({
     }
   };
 
- /*  const handleSelectStateError = (e: React.ChangeEvent<HTMLFormElement>) => {
-    const { value } = e.target;
-    setFormData({
-      ...formData,
-      state: value
-    });
-
-    // Validate the state selection and update errors state
-    setErrors({
-      ...errors,
-      state: validateInput('state', value)
-    });
-  }; 
-*/
-  // handel submit
-  // const handleSubmit2 = (e: React.ChangeEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-
-  //   // Validate all fields before submitting
-  //   const formErrors = {};
-  //   Object.keys(formData).forEach((key) => {
-  //     formErrors[key] = validateInput(key, formData[key]);
-  //   });
-  //   setErrors(formErrors);
-
-  //   // Check if there are any errors
-  //   const isValid = Object.values(formErrors).every((error) => !error.trim());
-
-  //   if (isValid) {
-  //     console.log('Form submitted:', formData);
-  //     // Send the updated answer to the backend
-  //       try {
-  //         const response = await axios.post('http://localhost:4000/profile', { profile: formData });
-  //           console.log('Profile saved successfully:', response.data);
-  //         } catch (error) {
-  //           console.error('Error saving profile:', error);
-  //         }
-  //   } else {
-  //     console.log('Form contains errors. Please fix them before submitting.');
-  //   }
-  // }; 
-  
-  // states
-  // const [selectedState, setSelectedState] = useState<string>('');
-  
-  const handleSelectState = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newState = e.target.value;
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-    console.log(`Selected state: ${newState}`);
-  };
-  
+  // list of objects that contains the US States
   const usStates = [
     { value: 'AL', label: 'Alabama' },
     { value: 'AK', label: 'Alaska' },
@@ -246,55 +129,54 @@ const [errors, setErrors] = useState<FormErrors>({
     { value: 'WI', label: 'Wisconsin' },
     { value: 'WY', label: 'Wyoming' },
   ];
-  
-  
-  // handel changes
+
+
+  // handeling changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     // console.log('change', e.target.value)
   }
-  
-  
+  // handleing state changes
+  const handleSelectState = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newState = e.target.value;
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+    console.log(`Selected state: ${newState}`);
+  };
+
+  // checking validation before submiting to the backend
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
+
     // Validate all fields before submitting
     const formErrors: FormErrors = {} as FormErrors; // Specify the type explicitly
     Object.keys(formData).forEach((key) => {
       formErrors[key as keyof FormErrors] = validateInput(key, formData[key as keyof FormData]);
     });
     setErrors(formErrors);
-  
+
     // Check if there are any errors
     const isValid = Object.values(formErrors).every((error) => !error.trim());
-    
+
     if (isValid) {
       console.log('Form submitted:', formData);
       // Send the updated answer to the backend
       // submiting to the backend
       try {
         const response = await axios.post('http://localhost:4000/profile', { profile: formData });
-          console.log('Profile saved successfully:', response.data);
-        } catch (error) {
-          console.error('Error saving profile:', error);
-        }
+        console.log('Profile saved successfully:', response.data);
+      } catch (error) {
+        console.error('Error saving profile:', error);
+      }
 
     } else {
       console.log('Form contains errors. Please fix them before submitting.');
     }
 
   }
-  
-  
-  
- /*  // const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   // input validation 
-  //   console.log(formData)
-  //   // send the updated answer to the backend
 
-  // } */
-  const inputcss = 'border-2 border-gray-500 p-1  text-black rounded-md focus:border-red-500 focus:ring-red-500 w-full sm:p-3'
+  const inputcss = 'border-2 border-gray-500 p-1  text-black rounded-md focus:border-red-500 focus:ring-red-500 w-full sm:p-3';
+
+  // Return
   return (
     <div>
 
@@ -326,8 +208,8 @@ const [errors, setErrors] = useState<FormErrors>({
                 onChange={handleChange}
                 placeholder='Enter First Name' />
               {errors.firstName && <p className=' text-red-500'>{errors.firstName}</p>}
-             {/* Last Name */}
-             <label htmlFor="lastName" className='block text-sm pb-2 mt-3'>Last Name</label>
+              {/* Last Name */}
+              <label htmlFor="lastName" className='block text-sm pb-2 mt-3'>Last Name</label>
               <input className='border-2 border-gray-500 p-3 text-black rounded-md focus:border-red-500 focus:ring-red-500 w-full'
                 type="text"
                 required
@@ -350,7 +232,7 @@ const [errors, setErrors] = useState<FormErrors>({
                 value={formData.address1}
                 onChange={handleChange}
                 placeholder='Enter Address1' />
-                {errors.address1 && <p className=' text-red-500'>{errors.address1}</p>}
+              {errors.address1 && <p className=' text-red-500'>{errors.address1}</p>}
             </div>
             {/* Address2 */}
             <div className='pb-4'>
@@ -434,7 +316,3 @@ const [errors, setErrors] = useState<FormErrors>({
 }
 
 export default Profile
-// function setScreenWidth(innerWidth: number) {
-//   throw new Error('Function not implemented.');
-// }
-
