@@ -160,4 +160,54 @@ describe('arrow_function', () => {
         expect(res.json).toHaveBeenCalledWith('testuser');
     });
 
+        // The app should use JSON as its primary data format.
+        it('should use JSON as primary data format', () => {
+          const express = require('express');
+          const app = express();
+          const code_under_test = require('./fuel-pro/index.js');
+    
+          expect(app.use).toHaveBeenCalledWith(express.json());
+        });
+
+            // Form data is initialized with empty strings for username and password
+    it('should initialize form data with empty strings for username and password', () => {
+      // Arrange
+      const useStateMock = jest.spyOn(React, 'useState');
+      useStateMock.mockImplementation((initialValue) => [initialValue, jest.fn()]);
+
+      // Act
+      const result = SignUp();
+
+      // Assert
+      expect(useStateMock).toHaveBeenCalledWith({ username: '', password: '' });
+      expect(result).toBeDefined();
+    });
+
+        // The app should handle errors when retrieving a user by ID.
+      it('should handle errors when retrieving a user by ID', async () => {
+        const express = require('express');
+        const app = express();
+        const code_under_test = require('./fuel-pro/index.js');
+        const prisma = require('prisma');
+  
+        prisma.user.findUnique.mockRejectedValue(new Error('User not found'));
+  
+        const req = {
+          params: {
+            id: '123'
+          }
+        };
+        const res = {
+          status: jest.fn().mockReturnThis(),
+          json: jest.fn()
+        };
+  
+        await code_under_test['/users/:id'](req, res);
+  
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.json).toHaveBeenCalledWith({ error: 'User not found' });
+      });
+
+      
+
 });
