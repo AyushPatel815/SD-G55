@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 
 const session = require('express-session');
 
+
 const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -15,13 +16,20 @@ app.use(express.json());
 const cookieParser = require('cookie-parser');
 app.set('trust proxy', 1)
 
-app.use(cors({ credentials: true }));
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 app.use(session(
     {
         secret: 'ayushsarangjosh',
         saveUninitialized: true,
         resave: false,
         cookie: {
+            secure: false,
             maxAge: parseInt(process.env.SESSION_MAX_AGE),
         },
         secure: false,
@@ -210,6 +218,18 @@ app.post('/user', async (req, res) => {
 
         console.log('Session saved:', req.session);
 
+        const profile = await prisma.profile.findUnique({
+            where: {
+                clientUsername: existingUser.username
+            }
+        });
+
+        if (!profile) {
+            return res.status(404).json({ error: 'Profile not found' });
+        }
+
+        console.log('User profile:', profile);
+
         // Log the entire req object for inspection
         // console.log('Req object:', req);
 
@@ -313,7 +333,7 @@ app.post('/user', async (req, res) => {
 // });
 
 
-app.get('/profile', async (req, res) => {
+app.post('/profile', async (req, res) => {
     try {
         // Retrieve the user's username from the session
         const userSession = req.session;
@@ -323,35 +343,44 @@ app.get('/profile', async (req, res) => {
             return res.status(401).json({ error: 'User session not found' });
         }
         const username = userSession.user;
+
+        const { firstName, lastName, address1, address2, city, state, zip } = req.body
         // Find the user in the database based on the username
-        const user = await prisma.user.findUnique({
-            where: {
-                username: username
-            }
-        });
-        console.log('Session profile:', user);
+        // const existingProfile = await prisma.profile.findUnique({
+        //     where: {
+        //         clientUsername: username
+        //     }
+        // });
 
-        // If user not found, return a 404 error
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
+        // if (!existingProfile) {
+        //     return res.status(404).json({ error: 'Profile not found' });
+        // }
 
-        // Fetch user profile based on the retrieved user data
-        const profile = await prisma.profile.findUnique({
+        // Update the profile data
+        const updatedProfile = await prisma.profile.update({
             where: {
                 clientUsername: username
+            },
+            data: {
+                firstName: firstName,
+                lastName: lastName,
+                address1: address1,
+                address2: address2,
+                city: city,
+                state: state,
+                zipcode: zip,
+                userClient: {
+                    connect: {
+                        username: username
+                    }
+                }
             }
         });
 
-        // If profile not found, return a 404 error
-        if (!profile) {
-            return res.status(404).json({ error: 'Profile not found' });
-        }
-
-        console.log('Session profile:', profile);
+        console.log('Updated profile:', updatedProfile);
 
         // Return the user profile
-        res.json({ user: userSession.user, profile: profile });
+        res.json({ user: userSession.user, profile: updatedProfile });
     } catch (error) {
         console.error('Error fetching user profile:', error);
         res.status(500).json({ error: 'Internal Server Error' });
