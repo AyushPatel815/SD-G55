@@ -49,7 +49,7 @@ function Login() {
             //     // Handle the case where the token is missing in the response data
             // }
 
-            const response = await axios.post("http://localhost:4000/user", formData);
+            const response = await axios.post("http://localhost:4000/user", formData, { withCredentials: true });
 
             console.log('Login successful:', response.data);
 

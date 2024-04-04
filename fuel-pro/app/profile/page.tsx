@@ -25,15 +25,6 @@ function Profile() {
     zip: string;
   };
 
-  type FormErrors = {
-    firstName: string;
-    lastName: string;
-    address1: string;
-    address2: string;
-    city: string;
-    state: string;
-    zip: string;
-  };
 
   // Initialize state with explicit types
   const [formData, setFormData] = useState<FormData>({
@@ -68,24 +59,6 @@ function Profile() {
   });
 
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-  };
-
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-    const response = await axios.post('http://localhost:4000/profile', { profile: formData });
-      console.log('Profile saved successfully:', response.data);
-    } catch (error) {
-      console.error('Error saving profile:', error);
-    }
-  };
 
   const validateInput = (name: string, value: string) => {
     switch (name) {
@@ -106,113 +79,12 @@ function Profile() {
     }
   };
 
-  const handleSelectState = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newState = e.target.value;
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-    console.log(`Selected state: ${newState}`);
-    // You can perform any additional actions with the selected state here
-  };
 
   
 
   const inputcss = 'border-2 border-gray-500 p-1  text-black rounded-md focus:border-red-500 focus:ring-red-500 w-full sm:p-3'
 
-  /* // state for inputs
-  // const [formData, setFormData] = useState({
-  //   firstName: '',
-  //   lastName: '',
-  //   address1: '',
-  //   address2: '',
-  //   city: '',
-  //   state: '',
-  //   zip: ''
-  // });
 
-  // // state for errors in input
-  // const [errors, setErrors] = useState({
-  //   firstName: '',
-  //   lastName: '',
-  //   address1: '',
-  //   city: '',
-  //   state: '',
-  //   zip: ''
-  // }); */
-
-  // Define types for form data and errors
-type FormData = {
-  firstName: string;
-  lastName: string;
-  address1: string;
-  address2: string;
-  city: string;
-  state: string;
-  zip: string;
-};
-
-type FormErrors = {
-  firstName: string;
-  lastName: string;
-  address1: string;
-  address2: string;
-  city: string;
-  state: string;
-  zip: string;
-};
-
-// Initialize state with explicit types
-const [formData, setFormData] = useState<FormData>({
-  firstName: '',
-  lastName: '',
-  address1: '',
-  address2: '',
-  city: '',
-  state: '',
-  zip: ''
-});
-
-const [errors, setErrors] = useState<FormErrors>({
-  firstName: '',
-  lastName: '',
-  address1: '',
-  address2: '',
-  city: '',
-  state: '',
-  zip: ''
-});
-
-  /* const handleChangeError = (e:React.ChangeEvent<HTMLFormElement>) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-
-    // Validate the input and update errors state
-    setErrors({
-      ...errors,
-      [name]: validateInput(name, value)
-    });
-  }; */
-
-  // input validation
-  const validateInput = (name: string, value: string) => {
-    switch (name) {
-      case 'firstName':
-        return value.trim().length > 1 && value.trim().length <= 50 ? '' : 'Invalid name (maximum 50 characters)';
-      case 'lastName':
-        return value.trim().length > 1 && value.trim().length <= 50 ? '' : 'Invalid name (maximum 50 characters)';
-      case 'address1':
-        return value.trim().length > 1 && value.trim().length <= 100 ? '' : 'Invalid address';
-      case 'city':
-        return value.trim().length > 1 && value.trim().length <= 100 ? '' : 'Invalid city';
-      // case 'state':
-      //   return value ? '' : 'Please select a state';
-      case 'zip':
-        return /^\d{5,9}$/.test(value) ? '' : 'Invalid zip code (5-9 characters)';
-      default:
-        return '';
-    }
-  };
 
   // list of objects that contains the US States
   const usStates = [
@@ -300,7 +172,9 @@ const [errors, setErrors] = useState<FormErrors>({
       // Send the updated answer to the backend
       // submiting to the backend
       try {
-        const response = await axios.post('http://localhost:4000/profile', { profile: formData });
+        const response = await axios.post('http://localhost:4000/profile', formData, { withCredentials: true });
+        console.log('Profile data:', response.data);
+
         console.log('Profile saved successfully:', response.data);
       } catch (error) {
         console.error('Error saving profile:', error);
@@ -311,8 +185,6 @@ const [errors, setErrors] = useState<FormErrors>({
     }
 
   }
-
-  const inputcss = 'border-2 border-gray-500 p-1  text-black rounded-md focus:border-red-500 focus:ring-red-500 w-full sm:p-3';
 
   // Return
   return (
