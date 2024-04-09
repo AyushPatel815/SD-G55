@@ -59,6 +59,7 @@ function Login() {
                 setError(null);
                 setIsValidUser(true);
                 setIsLoggedIn(true);
+                redirect('/dashboard');
             } else {
                 console.error('Invalid credentials');
                 setError('Invalid credentials');
