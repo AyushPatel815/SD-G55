@@ -7,52 +7,85 @@ import NavBar from '../components/NavBar'
 // import { LucideGavel } from 'lucide-react'
 import Image from 'next/image'
 import Background_img from "../../public/dashboard-img.png"
+import axios from 'axios'
 
 
 function page() {
 
+  const [formData, setFormData] = useState({
+    gallons: '',
+    date: ''
+  });
+  const [error, setError] = useState<string | null>(null);
+
   // for the background image
-  const [screenWidth, setScreenWidth] = useState<number>(0);
+  // const [screenWidth, setScreenWidth] = useState<number>(0);
 
-  useEffect(() => {
-    // Function to update screenWidth when the window is resized
-    const handleResize = () => {
-      setScreenWidth(window.innerWidth);
-    };
+  // useEffect(() => {
+  //   // Function to update screenWidth when the window is resized
+  //   const handleResize = () => {
+  //     setScreenWidth(window.innerWidth);
+  //   };
 
-    // Set initial screenWidth
-    setScreenWidth(window.innerWidth);
+  //   // Set initial screenWidth
+  //   setScreenWidth(window.innerWidth);
 
-    // Add event listener for window resize
-    window.addEventListener('resize', handleResize);
+  //   // Add event listener for window resize
+  //   window.addEventListener('resize', handleResize);
 
-    // Remove event listener on component unmount
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []); // Empty dependency array ensures that the effect runs only once
+  //   // Remove event listener on component unmount
+  //   return () => {
+  //     window.removeEventListener('resize', handleResize);
+  //   };
+  // }, []); // Empty dependency array ensures that the effect runs only once
 
-  // Calculate dynamic width and height based on screen size
-  const dynamicWidth = Math.min(screenWidth, 2600); // You can adjust the maximum width as needed
-  const dynamicHeight = (9 / 16) * dynamicWidth; // Assuming a 16:9 aspect ratio
+  // // Calculate dynamic width and height based on screen size
+  // const dynamicWidth = Math.min(screenWidth, 2600); // You can adjust the maximum width as needed
+  // const dynamicHeight = (9 / 16) * dynamicWidth; // Assuming a 16:9 aspect ratio
 
-  const [gallons, setGallons] = useState("");
-  const [date, setDate] = useState("");
-  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target as HTMLInputElement;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+
+  const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (isNaN(Number(gallons)) || Number(gallons) <= 0) {
-      setError("Invalid Input")
-      return
-    } else {
-
-      setError("")
-      // send to backend
-      console.log(gallons, date)
+    // Check if gallons field is empty
+    if (formData.gallons.trim() === '') {
+        setError('Gallons field cannot be empty');
+        return;
     }
-  }
+
+    try {
+        // Send the request with formData
+        const response = await axios.post("http://localhost:4000/fuel-quote", {
+            requestedGallons: formData.gallons, // Use 'requestedGallons' as the field name
+            date: formData.date
+        }, { withCredentials: true });
+
+        // Check if the response is successful
+        if (response.status === 201) {
+            console.log('Fuel quote created successfully:', response.data);
+            // Clear the form data and error state
+            setFormData({ gallons: '', date: '' });
+            setError(null);
+        } else {
+            console.error('Unable to create fuel quote');
+            setError('Unable to create fuel quote');
+        }
+    } catch (error: any) {
+        console.error('Error creating fuel quote:', error);
+        setError(error.response.data.error);
+    }
+};
+
+
   return (
     <div>
 
@@ -74,7 +107,7 @@ function page() {
 
       <div className='flex items-center justify-center h-screen w-screen]'>
         {/* form begins here */}
-        <form className=' border-yellow-50 bg-yellow/80 h-[70%] w-[34%] bg-transparent backdrop-blur-md  mb-20 border-[medium]  z-[10] rounded-[30px] ' onSubmit={handleSubmit} action={'/'}>
+        <form className=' border-yellow-50 bg-yellow/80 h-[70%] w-[34%] bg-transparent backdrop-blur-md  mb-20 border-[medium]  z-[10] rounded-[30px] ' onSubmit={handleSubmit} action={''}>
           <div className='flex text-yellow-50 items-center text-3xl h-[40]  font-bold ml-4'>
             <h1>Fuel Quote</h1>
           </div>
@@ -91,10 +124,11 @@ function page() {
               className='text-black-600 text-m min=0 border-2 border-gray-500 p-2 rounded-md focus:border-red-500 focus:ring-red-500 w-1/2 ml-7 mt-2'
               type='text'
               id='gallon'
-              name='gallon'
+              name='gallons'
               placeholder='Enter number of Gallons'
-              value={gallons}
-              onChange={(event) => setGallons(event.target.value)}
+              value={formData.gallons}
+              onChange={handleChange}
+
             />
             {error && <p className="text-red-500 text-xs mt-2 ml-7">{error}</p>}
           </div>
@@ -116,11 +150,11 @@ function page() {
               className='text-gray-600 text-m border-2  border-gray-500 p-2 rounded-md w-1/2 ml-7 mt-2'
               type='date'
               id='deliveryDate'
-              name='deliveryDate'
+              name='date'
               placeholder='Select a date'
               min={new Date().toISOString().split('T')[0]}
-              value={date}
-              onChange={(event) => setDate(event.target.value)}
+              value={formData.date}
+              onChange={handleChange}
               required
             />
           </div>

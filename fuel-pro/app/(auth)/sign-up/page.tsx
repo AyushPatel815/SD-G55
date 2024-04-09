@@ -35,12 +35,18 @@ function SignUp() {
         console.log(formData);
 
         try {
-            const response = await axios.post("http://localhost:4000/signup", formData);
+            const response = await axios.post("http://localhost:4000/signup", formData, { withCredentials: true });
 
-            console.log('Signup successful:', response.data);
-            setFormData({ username: '', password: '' });
-            setError(null);
-            setIsSignedUp(true); // Update state to reflect signup success
+            if (response.data) {
+                console.log('Signup successful:', response.data);
+                setFormData({ username: '', password: '' });
+                setError(null);
+                setIsSignedUp(true); // Update state to reflect signup success
+            } else {
+                console.error('Unable to signup');
+                setError('unable to signup');
+                setIsSignedUp(false);
+            }
 
         } catch (error: any) {
             console.error('Error during signup:', error);
