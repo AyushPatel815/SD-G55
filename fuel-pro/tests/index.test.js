@@ -129,7 +129,7 @@ describe('POST /signup', () => {
 });
 
 
-describe('GET /quote', () => {
+/*describe('GET /quote', () => {
   it('should respond with status 401 if user session is not found', async () => {
     const response = await request(app).get('/quote');
     expect(response.status).toBe(401);
@@ -137,6 +137,85 @@ describe('GET /quote', () => {
   });
 
   // You can write more test cases for scenarios where the user session exists and has associated quotes
+});*/
+
+describe('GET /quote', () => {
+  it('should fetch user quotes and respond with status 200', async () => {
+    // Mock user session data
+    const mockUserSession = {
+      user: 'Ayush'
+    };
+
+    // Mock quotes associated with the user
+    const mockQuotes = [
+      { id: '1', clientUsername: 'Ayush', gallons: 10, price: 100 },
+      { id: '2', clientUsername: 'Ayush', gallons: 15, price: 150 }
+    ];
+
+    // Mock the Prisma user and quote find methods
+    jest.spyOn(prisma.user, 'findUnique').mockResolvedValueOnce({ username: 'Ayush' });
+    jest.spyOn(prisma.quote, 'findMany').mockResolvedValueOnce(mockQuotes);
+
+    // Make the request to the endpoint using supertest
+    const response = await request(app)
+      .get('/quote')
+      .set('Cookie', [`session=${JSON.stringify(mockUserSession)}`]);
+
+    // Assert the response
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('user', mockUserSession.user);
+    expect(response.body).toHaveProperty('quotes', mockQuotes);
+  });
+
+  it('should respond with status 404 if user is not found', async () => {
+    // Mock user session data
+    const mockUserSession = {
+      user: 'NonExistentUser'
+    };
+
+    // Mock the Prisma user find method to return null
+    jest.spyOn(prisma.user, 'findUnique').mockResolvedValueOnce(null);
+
+    // Make the request to the endpoint using supertest
+    const response = await request(app)
+      .get('/quote')
+      .set('Cookie', [`session=${JSON.stringify(mockUserSession)}`]);
+
+    // Assert the response
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: 'User not found' });
+  });
+
+  it('should respond with status 404 if no quotes are found for the user', async () => {
+    // Mock user session data
+    const mockUserSession = {
+      user: 'Ayush'
+    };
+
+    // Mock the Prisma user find method to return a user
+    jest.spyOn(prisma.user, 'findUnique').mockResolvedValueOnce({ username: 'Ayush' });
+
+    // Mock the Prisma quote find method to return an empty array
+    jest.spyOn(prisma.quote, 'findMany').mockResolvedValueOnce([]);
+
+    // Make the request to the endpoint using supertest
+    const response = await request(app)
+      .get('/quote')
+      .set('Cookie', [`session=${JSON.stringify(mockUserSession)}`]);
+
+    // Assert the response
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: 'Quotes not found for this user' });
+  });
+
+  it('should respond with status 401 if user session is not found', async () => {
+    // Make the request to the endpoint using supertest without setting session cookie
+    const response = await request(app).get('/quote');
+
+    // Assert the response
+    expect(response.status).toBe(401);
+    expect(response.body).toEqual({ error: 'User session not found' });
+  });
 });
 
 
