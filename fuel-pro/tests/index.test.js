@@ -219,14 +219,128 @@ describe('GET /quote', () => {
 });
 
 
+// describe('POST /fuel-quote', () => {
+//   it('should respond with status 401 if user session is not found', async () => {
+//     const response = await request(app)
+//       .post('/fuel-quote')
+//       .send({ requestedGallons: 100, date: new Date().toISOString() });
+//     expect(response.status).toBe(401);
+//     expect(response.body).toHaveProperty('error', 'User session not found');
+//   });
+
+// });
+
 describe('POST /fuel-quote', () => {
+  it('should create a new fuel quote and respond with status 201', async () => {
+    // Mock request body
+    const requestBody = {
+      requestedGallons: 100,
+      date: '2024-04-11'
+    };
+
+    // Mock session user
+    const mockSession = {
+      user: 'Richer'
+    };
+
+    // Mock profile data
+    const mockProfile = {
+      address1: '815 Stacross',
+      city: 'Missouri City',
+      state: 'TX',
+      zipcode: '12340'
+      // Add other necessary fields
+    };
+
+    // Mock prisma profile findUnique method
+    prisma.profile.findUnique.mockResolvedValueOnce(mockProfile);
+
+    // Mock prisma quote create method
+    prisma.quote.create.mockResolvedValueOnce({
+      // Mocked new quote object
+      // Include necessary fields like clientUsername, date, gallons, etc.
+    });
+
+    // Mock session data
+    const mockReq = {
+      session: mockSession,
+      body: requestBody
+    };
+
+    // Make request to the endpoint
+    const response = await request(app).post('/fuel-quote').send(mockReq);
+
+    // Assert the response
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty('user', 'testUser');
+    expect(response.body).toHaveProperty('quote');
+    // Add more assertions based on the expected structure of the response
+  });
+
   it('should respond with status 401 if user session is not found', async () => {
-    const response = await request(app)
-      .post('/fuel-quote')
-      .send({ requestedGallons: 100, date: new Date().toISOString() });
+    // Make request to the endpoint without a session
+    const response = await request(app).post('/fuel-quote').send({});
+
+    // Assert the response
     expect(response.status).toBe(401);
     expect(response.body).toHaveProperty('error', 'User session not found');
   });
 
+  it('should respond with status 404 if profile is not found', async () => {
+    // Mock session user
+    const mockSession = {
+      user: 'nonExistentUser'
+    };
+
+    // Mock session data
+    const mockReq = {
+      session: mockSession,
+      body: {
+        requestedGallons: 100,
+        date: '2024-04-11'
+      }
+    };
+
+    // Mock prisma profile findUnique method to return null
+    prisma.profile.findUnique.mockResolvedValueOnce(null);
+
+    // Make request to the endpoint
+    const response = await request(app).post('/fuel-quote').send(mockReq);
+
+    // Assert the response
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty('error', 'Profile not found');
+  });
+
+  it('should respond with status 500 if an error occurs during quote creation', async () => {
+    // Mock session user
+    const mockSession = {
+      user: 'testUser'
+    };
+
+    // Mock session data
+    const mockReq = {
+      session: mockSession,
+      body: {
+        requestedGallons: 100,
+        date: '2024-04-11'
+      }
+    };
+
+    // Mock prisma profile findUnique method
+    prisma.profile.findUnique.mockResolvedValueOnce({ /* Mocked profile data */ });
+
+    // Mock prisma quote create method to throw an error
+    prisma.quote.create.mockRejectedValueOnce(new Error('Some error occurred'));
+
+    // Make request to the endpoint
+    const response = await request(app).post('/fuel-quote').send(mockReq);
+
+    // Assert the response
+    expect(response.status).toBe(500);
+    expect(response.body).toHaveProperty('error', 'Internal Server Error');
+  });
+
+  // Add more test cases as needed to cover edge cases and error scenarios
 });
 
