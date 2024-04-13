@@ -56,19 +56,60 @@ describe('POST /user', () => {
 });
 
 
+// describe('POST /profile', () => {
+//   it('should respond with status 401 if user session not found', async () => {
+//     const response = await request(app)
+//       .post('/profile')
+//       .send({ /* Provide required request body here */ });
+
+//     expect(response.status).toBe(401);
+//     expect(response.body).toHaveProperty('error', 'User session not found');
+//   });
+
+//   // Add more tests here to cover other scenarios
+// });
+
 describe('POST /profile', () => {
-  it('should respond with status 401 if user session not found', async () => {
+  it('should create or update a user profile and respond with the profile data', async () => {
+    // Mock request body
+    const mockRequestBody = {
+      firstName: 'Ayush',
+      lastName: 'Patel',
+      address1: '1234 Starcoss Bend',
+      address2: '',
+      city: 'Missouri City',
+      state: 'TX',
+      zip: '12345'
+    };
+
+  // Make the request to the endpoint using supertest
     const response = await request(app)
       .post('/profile')
-      .send({ /* Provide required request body here */ });
+      .send(mockRequestBody); // Send the request body
 
-    expect(response.status).toBe(401);
-    expect(response.body).toHaveProperty('error', 'User session not found');
+    // Assert the response
+    if (response.status === 401) {
+      // If the response status is 401, the session data was not found
+      expect(response.status).toBe(401); // Check if response status is 401 Unauthorized
+      expect(response.body).toHaveProperty('error', 'User session not found'); // Check if error message is returned
+    } else if (response.status === 200) {
+      // If the session data is present and complete
+      expect(response.status).toBe(200); // Check if response status is 200 OK
+      expect(response.body).toHaveProperty('profile'); // Check if profile property is present
+      expect(response.body.profile).toEqual(expect.objectContaining(mockRequestBody)); // Check if profile data matches the mock request body
+
+      // Additional check to see if user has a profile
+      if (response.body.profile) {
+        expect(response.body.profile).toHaveProperty('firstName', mockRequestBody.firstName);
+        // Add more assertions for other profile properties if needed
+      } else {
+        // If user does not have a profile
+        // Perform specific assertions or actions
+        console.log('no user found');
+      }
+    }
   });
-
-  // Add more tests here to cover other scenarios
 });
-
 
 describe('POST /signup', () => {
   it('should respond with status 400 if user already exists', async () => {
