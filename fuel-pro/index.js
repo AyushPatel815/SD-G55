@@ -11,6 +11,7 @@ const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+
 // Middleware to parse JSON request bodies
 app.use(express.json());
 const cookieParser = require('cookie-parser');
@@ -56,23 +57,23 @@ app.get('/', (req, res) => {
 
 
 // Get a user by ID
-app.get('/users/:id', async (req, res) => {
-    const { id } = req.params;
-    try {
-        const user = await prisma.user.findUnique({
-            where: {
-                username: "Ayush",
-            },
-        });
-        if (!user) {
-            res.status(404).json({ error: 'User not found' });
-        } else {
-            res.json(user);
-        }
-    } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
+// app.get('/users/:id', async (req, res) => {
+//     const { id } = req.params;
+//     try {
+//         const user = await prisma.user.findUnique({
+//             where: {
+//                 username: "Ayush",
+//             },
+//         });
+//         if (!user) {
+//             res.status(404).json({ error: 'User not found' });
+//         } else {
+//             res.json(user);
+//         }
+//     } catch (error) {
+//         res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// });
 
 
 app.post('/user', async (req, res) => {
@@ -177,7 +178,7 @@ app.post('/profile', async (req, res) => {
             });
         }
 
-        res.json({ user: userSession.user, profile: existingProfile });
+        res.json({ user: username, profile: existingProfile });
     } catch (error) {
         console.error('Error fetching user profile:', error);
         res.status(500).json({ error: 'Internal Server Error' });
