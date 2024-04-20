@@ -120,7 +120,7 @@ app.post('/user', async (req, res) => {
         res.json(req.session.user);
 
     } catch (error) {
-        console.error('Error creating user:', error);
+        console.error('Error finding user:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
@@ -200,7 +200,7 @@ app.post('/signup', async (req, res) => {
         });
 
         if (existingUser) {
-            return res.status(400).json({ error: 'User already exists.' });
+            return res.status(401).json({ error: 'User already exists.' });
         }
 
         // Create the new user
@@ -250,9 +250,9 @@ app.get('/quote', async (req, res) => {
         });
 
         // If user not found, return a 404 error
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
+        // if (!user) {
+        //     return res.status(404).json({ error: 'User not found' });
+        // }
 
         // Fetch quotes associated with the user
         const quotes = await prisma.quote.findMany({
@@ -278,7 +278,7 @@ app.get('/quote', async (req, res) => {
 app.post('/fuel-quote', async (req, res) => {
     try {
         // Retrieve the user's username from the session
-        const { requestedGallons, date } = req.body;
+        // const { requestedGallons, date } = req.body;
         const userSession = req.session;
         if (!userSession || !userSession.user) {
             return res.status(401).json({ error: 'User session not found' });
@@ -320,9 +320,9 @@ app.post('/fuel-quote', async (req, res) => {
             }
         });
 
-        console.log('New Quote:', newQuote); // Log new quote object
+        // console.log('New Quote:', newQuote); // Log new quote object
 
-        res.status(201).json({ user: clientUsername, quote: newQuote });
+        res.json({ user: clientUsername, quote: newQuote });
     } catch (error) {
         console.error('Error creating fuel quote:', error);
         res.status(500).json({ error: 'Internal Server Error' });
