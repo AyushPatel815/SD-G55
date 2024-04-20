@@ -29,25 +29,6 @@ function Login() {
         console.log(formData)
 
         try {
-        // const response = await axios.post("http://localhost:4000/user", formData);
-
-            // console.log('Login successful:', response.data);
-            // const token = response.data.token;
-            // if (token) {
-            //     console.log('Token stored:', token);
-            //     // Store the token in localStorage or session storage if needed
-            //     setFormData({ username: '', password: '' });
-            //     setError(null);
-            //     setIsValidUser(true);
-            //     setIsLoggedIn(true);
-            //     console.log('Bearer Token:', token); // Print the bearer token
-            //     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            //     console.log('Authorization header set:', axios.defaults.headers.common['Authorization']);
-
-            // } else {
-            //     console.error('Token is missing in response data');
-            //     // Handle the case where the token is missing in the response data
-            // }
 
             const response = await axios.post("http://localhost:4000/user", formData, { withCredentials: true });
 
@@ -59,7 +40,7 @@ function Login() {
                 setError(null);
                 setIsValidUser(true);
                 setIsLoggedIn(true);
-                redirect('/dashboard');
+                // redirect('/dashboard');
             } else {
                 console.error('Invalid credentials');
                 setError('Invalid credentials');
