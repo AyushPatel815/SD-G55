@@ -116,6 +116,7 @@ describe('POST /user', () => {
 });
 
 
+
 let sessionCookie; // Variable to store the session cookie
 
 
@@ -331,8 +332,8 @@ it('should get 500 internal server error', async () => {
   expect(response.status).toBe(500);
   expect(response.body).toEqual({ error: 'Internal Server Error' });
 });
-});
 
+});
 
 describe('POST /signup', () => {
 
