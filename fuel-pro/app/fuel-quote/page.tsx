@@ -24,7 +24,7 @@ function page() {
       address2: string;
       city: string;
       state: string;
-      zip: string;
+      zipcode: string;
       gallons: string;
       date: string;
     };
@@ -36,7 +36,7 @@ function page() {
       address2: '',
       city: '',
       state: '',
-      zip: '',
+      zipcode: '',
       gallons: '',
       date: ''
     });
@@ -47,7 +47,7 @@ function page() {
       address2: string;
       city: string;
       state: string;
-      zip: string;
+      zipcode: string;
       gallons: string;
       date: string;
     };
@@ -57,7 +57,7 @@ function page() {
       address2: '',
       city: '',
       state: '',
-      zip: '',
+      zipcode: '',
       gallons: '',
       date: ''
     });
@@ -72,8 +72,8 @@ function page() {
           return value.trim().length > 1 && value.trim().length <= 100 ? '' : 'Invalid city';
         case 'state':
           return value ? '' : 'Please select a state';
-        case 'zip':
-          return /^\d{5,9}$/.test(value) ? '' : 'Invalid zip code (5-9 characters)';
+        case 'zipcode':
+          return /^\d{5,9}$/.test(value) ? '' : 'Invalid zipcode code (5-9 characters)';
         case 'gallons':
           return /^\d+$/.test(value) && parseInt(value, 10) > 0 ? '' : 'Invalid gallon (must be greater than 0)';
         case 'date':
@@ -240,6 +240,35 @@ function page() {
     }
 };
 
+  useEffect(() => {
+    // Define a function to fetch user data
+    const fetchUserProfile = async () => {
+      try {
+        // Make API call to fetch user profile data
+        const response = await axios.get('http://localhost:4000/profile', { withCredentials: true });
+
+
+        // Extract required fields from response data
+        const { address1, address2, city, state, zipcode } = response.data;
+
+        // Set form data with extracted fields and default values for missing fields
+        setFormData(prevFormData => ({
+          ...prevFormData,
+          address1,
+          address2,
+          city,
+          state,
+          zipcode
+        }));
+      } catch (error) {
+        console.error('Error fetching data from profile:', error);
+      }
+    };
+
+    // Call the fetchUserProfile function when component mounts
+    fetchUserProfile();
+  }, []);
+
   const inputcss = 'border-2 border-gray-500 p-1  text-black rounded-md focus:border-red-500 focus:ring-red-500 w-full sm:p-3'
   const lableCss ='block pb-2 text-md'
   return (
@@ -357,19 +386,19 @@ function page() {
                 {errors.state && <p className=' text-red-500'>{errors.state}</p>}
             </div>
           </div>
-          {/* Zip code */}
+          {/* zipcode code */}
           <div className='pb-4'>
-            <label htmlFor="zip" className='block text-sm pb-2'>Zip Code</label>
+            <label htmlFor="zipcode" className='block text-sm pb-2'>zipcode Code</label>
 
             <input className={inputcss}
               type="text"
-              name='zip'
+              name='zipcode'
               required
-              id='zip'
+              id='zipcode'
               placeholder='Enter Zip Code'
-              value={formData.zip}
+              value={formData.zipcode}
               onChange={handleChange} />
-            {errors.zip && <p className=' text-red-500'>{errors.zip}</p>}
+            {errors.zipcode && <p className=' text-red-500'>{errors.zipcode}</p>}
           </div>
 
           {/* date */}
