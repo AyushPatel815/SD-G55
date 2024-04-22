@@ -138,6 +138,7 @@ const QuoteList = () => {
                 <td>{quote.city}</td>
                 <td>{quote.state}</td>
                 <td>{quote.zipcode}</td>
+                
               </tr>
             ))}
           </tbody>
