@@ -186,6 +186,38 @@ app.post('/profile', async (req, res) => {
 
 
 
+// Assuming you have the session middleware set up
+app.get('/profile', async (req, res) => {
+    try {
+        // Retrieve the user's username from the session
+        const userSession = req.session;
+
+        if (!userSession || !userSession.user) {
+            return res.status(401).json({ error: 'User session not found' });
+        }
+
+        const username = userSession.user;
+
+        // Fetch user profile data from your database
+        // Example: Replace this with your actual database query
+        const userProfile = await prisma.profile.findUnique({
+            where: {
+                clientUsername: username
+            }
+        });
+
+        // Check if profile exists
+        if (!userProfile) {
+            return res.status(404).json({ error: 'User profile not found' });
+        }
+
+        // Send user profile data as response
+        res.json(userProfile);
+    } catch (error) {
+        console.error('Error fetching user profile:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
 app.post('/signup', async (req, res) => {
     const { username, password } = req.body;
@@ -277,12 +309,7 @@ app.get('/quote', async (req, res) => {
 app.post('/fuel-quote', async (req, res) => {
     try {
         // Retrieve the user's username from the session
-        // const { requestedGallons, date } = req.body;
-        // Extract data from request body
-        const { requestedGallons, date, suggestedPrice, totalAmountDue } = req.body;
-
-
-
+        const { requestedGallons, date } = req.body;
         const userSession = req.session;
         if (!userSession || !userSession.user) {
             return res.status(401).json({ error: 'User session not found' });
@@ -301,22 +328,15 @@ app.post('/fuel-quote', async (req, res) => {
             return res.status(404).json({ error: 'Profile not found' });
         }
 
-        let address = req.body.address1;
-        if (req.body.address2) {
-            address += `, ${req.body.address2}`;
+        let address = profile.address1;
+        if (profile.address2) {
+            address += , ${profile.address2};
         }
 
         console.log('Requested Gallons:', requestedGallons); // Check requested gallons
 
-
         // Convert requestedGallons to integer
         const gallons = parseInt(requestedGallons);
-        let price = suggestedPrice;
-        let due = totalAmountDue;
-
-
-        console.log('price', price);
-        console.log('due', due);
 
         // Create the fuel quote in the database
         const newQuote = await prisma.quote.create({
@@ -325,23 +345,20 @@ app.post('/fuel-quote', async (req, res) => {
                 date: new Date(date),
                 gallons: gallons,
                 address: address,
-                price: price,
-                due: due,
-                city: req.body.city,
-                state: req.body.state,
-                zipcode: req.body.zipcode
+                city: profile.city,
+                state: profile.state,
+                zipcode: profile.zipcode
             }
         });
 
-        // console.log('New Quote:', newQuote); // Log new quote object
+        console.log('New Quote:', newQuote); // Log new quote object
 
-        res.json({ user: clientUsername, quote: newQuote });
+        res.status(201).json({ user: clientUsername, quote: newQuote });
     } catch (error) {
         console.error('Error creating fuel quote:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
 
 
 
