@@ -186,6 +186,38 @@ app.post('/profile', async (req, res) => {
 
 
 
+// Assuming you have the session middleware set up
+app.get('/profile', async (req, res) => {
+    try {
+        // Retrieve the user's username from the session
+        const userSession = req.session;
+
+        if (!userSession || !userSession.user) {
+            return res.status(401).json({ error: 'User session not found' });
+        }
+
+        const username = userSession.user;
+
+        // Fetch user profile data from your database
+        // Example: Replace this with your actual database query
+        const userProfile = await prisma.profile.findUnique({
+            where: {
+                clientUsername: username
+            }
+        });
+
+        // Check if profile exists
+        if (!userProfile) {
+            return res.status(404).json({ error: 'User profile not found' });
+        }
+
+        // Send user profile data as response
+        res.json(userProfile);
+    } catch (error) {
+        console.error('Error fetching user profile:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
 app.post('/signup', async (req, res) => {
     const { username, password } = req.body;
@@ -342,7 +374,7 @@ app.post('/fuel-quote', async (req, res) => {
 
         let address = profile.address1;
         if (profile.address2) {
-            address += `, ${profile.address2}`;
+            address += , ${profile.address2};
         }
 
         console.log('Requested Gallons:', requestedGallons); // Check requested gallons
@@ -371,7 +403,6 @@ app.post('/fuel-quote', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
 
 
 
