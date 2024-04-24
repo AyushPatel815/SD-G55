@@ -11,6 +11,7 @@ const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+
 // Middleware to parse JSON request bodies
 app.use(express.json());
 const cookieParser = require('cookie-parser');
@@ -56,23 +57,23 @@ app.get('/', (req, res) => {
 
 
 // Get a user by ID
-app.get('/users/:id', async (req, res) => {
-    const { id } = req.params;
-    try {
-        const user = await prisma.user.findUnique({
-            where: {
-                username: "Ayush",
-            },
-        });
-        if (!user) {
-            res.status(404).json({ error: 'User not found' });
-        } else {
-            res.json(user);
-        }
-    } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
+// app.get('/users/:id', async (req, res) => {
+//     const { id } = req.params;
+//     try {
+//         const user = await prisma.user.findUnique({
+//             where: {
+//                 username: "Ayush",
+//             },
+//         });
+//         if (!user) {
+//             res.status(404).json({ error: 'User not found' });
+//         } else {
+//             res.json(user);
+//         }
+//     } catch (error) {
+//         res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// });
 
 
 app.post('/user', async (req, res) => {
@@ -119,7 +120,7 @@ app.post('/user', async (req, res) => {
         res.json(req.session.user);
 
     } catch (error) {
-        console.error('Error creating user:', error);
+        console.error('Error finding user:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
@@ -177,13 +178,78 @@ app.post('/profile', async (req, res) => {
             });
         }
 
-        res.json({ user: userSession.user, profile: existingProfile });
+        res.json({ user: username, profile: existingProfile });
     } catch (error) {
         console.error('Error fetching user profile:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
+// Assuming you have the session middleware set up
+app.get('/profile', async (req, res) => {
+    try {
+        // Retrieve the user's username from the session
+        const userSession = req.session;
+
+        if (!userSession || !userSession.user) {
+            return res.status(401).json({ error: 'User session not found' });
+        }
+
+        const username = userSession.user;
+
+        // Fetch user profile data from your database
+        // Example: Replace this with your actual database query
+        const userProfile = await prisma.profile.findUnique({
+            where: {
+                clientUsername: username
+            }
+        });
+
+        // Check if profile exists
+        if (!userProfile) {
+            return res.status(404).json({ error: 'User profile not found' });
+        }
+
+        // Send user profile data as response
+        res.json(userProfile);
+    } catch (error) {
+        console.error('Error fetching user profile:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.get('/fuel-quote', async (req, res) => {
+    try {
+        // Retrieve the user's username from the session
+        const userSession = req.session;
+
+        if (!userSession || !userSession.user) {
+            return res.status(401).json({ error: 'User session not found' });
+        }
+
+        const username = userSession.user;
+
+        // Fetch user profile data from your database
+        // Example: Replace this with your actual database query
+        const userProfile = await prisma.profile.findUnique({
+            where: {
+                clientUsername: username
+            }
+        });
+
+        // Check if profile exists
+        if (!userProfile) {
+            return res.status(404).json({ error: 'User profile not found' });
+        }
+
+
+        // Send user profile data as response
+        res.json(userProfile);
+    } catch (error) {
+        console.error('Error fetching user profile:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
 
 // Assuming you have the session middleware set up
@@ -231,7 +297,7 @@ app.post('/signup', async (req, res) => {
         });
 
         if (existingUser) {
-            return res.status(400).json({ error: 'User already exists.' });
+            return res.status(401).json({ error: 'User already exists.' });
         }
 
         // Create the new user
@@ -325,9 +391,9 @@ app.get('/quote', async (req, res) => {
         });
 
         // If user not found, return a 404 error
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
+        // if (!user) {
+        //     return res.status(404).json({ error: 'User not found' });
+        // }
 
         // Fetch quotes associated with the user
         const quotes = await prisma.quote.findMany({
@@ -353,7 +419,7 @@ app.get('/quote', async (req, res) => {
 app.post('/fuel-quote', async (req, res) => {
     try {
         // Retrieve the user's username from the session
-        const { requestedGallons, date } = req.body;
+        // const { requestedGallons, date } = req.body;
         const userSession = req.session;
         if (!userSession || !userSession.user) {
             return res.status(401).json({ error: 'User session not found' });
@@ -395,9 +461,9 @@ app.post('/fuel-quote', async (req, res) => {
             }
         });
 
-        console.log('New Quote:', newQuote); // Log new quote object
+        // console.log('New Quote:', newQuote); // Log new quote object
 
-        res.status(201).json({ user: clientUsername, quote: newQuote });
+        res.json({ user: clientUsername, quote: newQuote });
     } catch (error) {
         console.error('Error creating fuel quote:', error);
         res.status(500).json({ error: 'Internal Server Error' });

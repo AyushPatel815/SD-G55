@@ -22,7 +22,7 @@ function Profile() {
     address2: string;
     city: string;
     state: string;
-    zip: string;
+    zipcode: string;
   };
 
 
@@ -34,7 +34,7 @@ function Profile() {
     address2: '',
     city: '',
     state: '',
-    zip: ''
+    zipcode: ''
   });
 
 
@@ -45,7 +45,7 @@ function Profile() {
     address2: string;
     city: string;
     state: string;
-    zip: string;
+    zipcode: string;
   };
 
   const [errors, setErrors] = useState<FormErrors>({
@@ -55,7 +55,7 @@ function Profile() {
     address2: '',
     city: '',
     state: '',
-    zip: ''
+    zipcode: ''
   });
 
 
@@ -72,8 +72,8 @@ function Profile() {
         return value.trim().length > 1 && value.trim().length <= 100 ? '' : 'Invalid city';
       // case 'state':
       //   return value ? '' : 'Please select a state';
-      case 'zip':
-        return /^\d{5,9}$/.test(value) ? '' : 'Invalid zip code (5-9 characters)';
+      case 'zipcode':
+        return /^\d{5,9}$/.test(value) ? '' : 'Invalid zipcode code (5-9 characters)';
       default:
         return '';
     }
@@ -141,6 +141,7 @@ function Profile() {
   ];
 
 
+
   // handeling changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -185,6 +186,24 @@ function Profile() {
     }
 
   }
+
+  useEffect(() => {
+    // Define a function to fetch user data
+    const fetchUserProfile = async () => {
+      try {
+        // Make API call to fetch user profile data
+        const response = await axios.get('http://localhost:4000/profile', { withCredentials: true });
+
+        // Set form data with fetched data
+        setFormData(response.data);
+      } catch (error) {
+        console.error('Error fetching profile data:', error);
+      }
+    };
+
+    // Call the fetchUserProfile function when component mounts
+    fetchUserProfile();
+  }, []);
 
   // Return
   return (
@@ -297,19 +316,19 @@ function Profile() {
                 {errors.state && <p className=' text-red-500'>{errors.state}</p>}
               </div>
             </div>
-            {/* Zip code */}
+            {/* zipcode code */}
             <div className='pb-4'>
-              <label htmlFor="zip" className='block text-sm pb-2'>Zip Code</label>
+              <label htmlFor="zipcode" className='block text-sm pb-2'>Zip Code</label>
 
               <input className={inputcss}
                 type="text"
-                name='zip'
+                name='zipcode'
                 required
-                id='zip'
-                placeholder='Enter Zip Code'
-                value={formData.zip}
+                id='zipcode'
+                placeholder='Enter zipcode Code'
+                value={formData.zipcode}
                 onChange={handleChange} />
-              {errors.zip && <p className=' text-red-500'>{errors.zip}</p>}
+              {errors.zipcode && <p className=' text-red-500'>{errors.zipcode}</p>}
             </div>
             {/* Save button */}
             <div>
