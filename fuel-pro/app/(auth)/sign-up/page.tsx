@@ -22,6 +22,8 @@ function SignUp() {
     const [error, setError] = useState<string | null>(null);
     const [isSignedUp, setIsSignedUp] = useState<boolean>(false); // Change state name to reflect signup status
 
+    const [validationError, setValidationError] = useState<string | null>(null);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData(prevState => ({
@@ -29,11 +31,22 @@ function SignUp() {
             [name]: value
         }));
     };
+    const validateInputs = () => {
+        if (!formData.username.trim() || !formData.password.trim()) {
+            setValidationError('Please fill in all fields.');
+            return false;
+        }
+        setValidationError(null);
+        return true;
+    };
+
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log(formData);
-
+        if (!validateInputs()) {
+            return;
+        }
         try {
             const response = await axios.post("http://localhost:4000/signup", formData, { withCredentials: true });
 
@@ -63,8 +76,11 @@ function SignUp() {
             <form onSubmit={handleSubmit}>
                 <h1 className=' text-3xl font-semibold text-white'>Sign up</h1>
                 <div className=' space-y-4 mt-5'>
-                    <Input type='username' name='username' placeholder='username' className=' bg-[#333] placeholder:text-xs placeholder:text-gray-400 w-full inline-block' required onChange={handleChange}/>
-                    <Input type='password' name='password' placeholder='password' className=' bg-[#333] placeholder:text-xs placeholder:text-gray-400 w-full inline-block' required onChange={handleChange}/>
+                    <Input type='username' name='username' placeholder='username' className=' text-white bg-[#333] placeholder:text-xs placeholder:text-gray-400 w-full inline-block' required onChange={handleChange} />
+                    <Input type='password' name='password' placeholder='password' className=' text-white bg-[#333] placeholder:text-xs placeholder:text-gray-400 w-full inline-block' required onChange={handleChange} />
+                    {validationError && (
+                        <p className="text-red-500 text-sm">Error{validationError}</p>
+                    )}
                     <Button type='submit' variant='destructive' className=' w-full text-black bg-[#bbb9b9] hover:bg-slate-500'>Sign up</Button>
                 </div>
             </form>

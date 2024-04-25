@@ -7,6 +7,9 @@ import NavBar from '../components/NavBar';
 import Link from 'next/link';
 import InstagramLogo from "../../public/instagram-icon.png";
 import FacebookLogo from "../../public/facebook-logo.png"
+import { redirect } from 'next/navigation';
+import { authOptions } from '../utils/auth';
+import { getServerSession } from 'next-auth';
 
 
 interface TypewriterTextProps {
@@ -16,7 +19,6 @@ interface TypewriterTextProps {
 
 
 function Dashboard() {
-
 
 
     const TypewriterText: React.FC<TypewriterTextProps> = ({ text, delay }) => {

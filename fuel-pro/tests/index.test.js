@@ -5,6 +5,7 @@ const session = require('express-session');
 const { arrow_function } = require("../index.js");
 const { PrismaClient } = require('@prisma/client');
 const createFuelQuote = require('../index.js'); // Import your error handler function
+const { describe } = require('node:test');
 
 const prisma = new PrismaClient();
 app.use(session(
@@ -51,25 +52,6 @@ describe('GET /', () => {
     expect(response.text).toBe('Welcome to the API!');
   });
 });
-
-
-// describe('GET /users/:id', () => {
-//   it('should respond with status 200 and user data', async () => {
-//     const response = await request(app).get('/users/1'); // Assuming user ID 1 exists
-//     expect(response.status).toBe(200);
-//     expect(response.body).toHaveProperty('username'); // Assuming your user object has a 'username' property
-//     expect(response.body.username).toBe('Ayush'); // Assuming the username of the user with ID 1 is 'Ayush'
-//   });
-
-
-
-//   // it('should respond with status 404 if user does not exist', async () => {
-//   //   const response = await request(app).get('/users/90'); // Assuming user ID 999 does not exist
-//   //   expect(response.status).toBe(404);
-//   //   expect(response.body).toHaveProperty('error');
-//   //   expect(response.body.error).toBe('User not found');
-//   // });
-// });
 
 
 describe('POST /user', () => {
@@ -147,109 +129,9 @@ let sessionCookie; // Variable to store the session cookie
 
   });
 
-
-  // it('should respond with status 500 if an internal server error occurs', async () => {
-  //   const response = await request(app)
-  //     .post('/user')
-  //     .send({ username: 'Ayus', password: 'Ayuh1920' });
-  
-  //   expect(response.status).toBe(500);
-  //   expect(response.body).toHaveProperty('error', 'Internal Server Error');
-  // });
-
-  // it('should retrieve existing user and save session', async () => {
-  //   const req = {
-  //     body: {
-  //       username: 'Ayush',
-  //       password: 'Ayush1920'
-  //     },
-  //     session: {
-  //       save: jest.fn()
-  //     }
-  //   };
-  //   console.log(session)
-  //   const res = {
-  //     status: jest.fn().mockReturnThis(),
-  //     json: jest.fn()
-  //   };
-  //   const prisma = {
-  //     user: {
-  //       findUnique: jest.fn().mockResolvedValue({ username: 'Ayush' })
-  //     }
-  //   };
-
-  //   // prisma.user.findUnique = jest.fn().mockResolvedValueOnce({ username: 'testuser' });
-  //   req.session.save = jest.fn().mockResolvedValueOnce();
-
-  //   expect(response.status).toBe(200);
-  //   expect(response.body).toBe(existingUsername);
-
-  // });
-
-  // it('should respond with status 500 if an error occurs during user creation', async () => {
-  //   // Mocking prisma user findUnique method to throw an error
-  //   jest.spyOn(prisma.user, 'findUnique').mockRejectedValueOnce(new Error('Database error'));
-
-  //   const response = await request(app)
-  //     .post('/user')
-  //     .send({ username: 'invalidUsername', password: 'invalidPassword' });
-
-  //   expect(response.status).toBe(500);
-  //   expect(response.body).toEqual({ error: 'Internal Server Error' });
-  // });
 });
 
 
-// describe('POST /profile', () => {
-//   it('should respond with status 401 if user session not found', async () => {
-//     const response = await request(app)
-//       .post('/profile')
-//       .send({ /* Provide required request body here */ });
-
-//     expect(response.status).toBe(401);
-//     expect(response.body).toHaveProperty('error', 'User session not found');
-//   });
-
-//   // Add more tests here to cover other scenarios
-// });
-
-// describe('POST /profile', () => {
-//   it('should create or update a user profile and respond with the profile data', async () => {
-//     // Mock user session data
-//     const mockUserSession = {
-//       user: 'Ayush' // Simulating a logged-in user
-//     };
-
-//     // Mock request body
-//     const mockRequestBody = {
-//       firstName: 'Ayush',
-//       lastName: 'Patel',
-//       address1: '1234 Starcoss Bend',
-//       address2: '',
-//       city: 'Missouri City',
-//       state: 'TX',
-//       zip: '12345'
-//     };
-
-//     // Simulate the request object with session and body
-//     const requestMock = {
-//       session: mockUserSession,
-//       body: mockRequestBody
-//     };
-
-//   // Make the request to the endpoint using supertest
-//     const response = await request(app)
-//       .post('/profile')
-//       .send(mockRequestBody) // Send the request body
-//       .set('Cookie', [`session=${JSON.stringify(mockUserSession)}`]); // Set the session cookie
-
-//     // Assert the response
-//     expect(response.status).toBe(200); // Check if response status is 200 OK
-//     expect(response.body).toHaveProperty('user', mockUserSession.user); // Check if user property is present and matches the mock user session
-//     expect(response.body).toHaveProperty('profile'); // Check if profile property is present
-//     expect(response.body.profile).toEqual(expect.objectContaining(mockRequestBody)); // Check if profile data matches the mock request body
-//   });
-// });
 
 describe('POST /profile', () => {
     it('should respond with status 401 if user session is not found', async () => {
@@ -311,39 +193,15 @@ describe('POST /profile', () => {
 
 });
 
-describe('POST /profile', () => {
-  
-it('should get 500 internal server error', async () => {
-  // Simulate an internal error by passing invalid data that triggers an error in the server
-  const invalidProfileData = {
-      // Missing required fields firstName and lastName
-      address1: '1234 Starcross Bend',
-      city: 'Sugarland',
-      state: 'AK',
-      zip: '12345'
-  };
-
-  const response = await request(app)
-      .post('/profile')
-      .send()
-      // .set('Cookie', sessionCookie); // Reuse the session cookie
-
-  // Assertions
-  expect(response.status).toBe(500);
-  expect(response.body).toEqual({ error: 'Internal Server Error' });
-});
-
-});
 
 describe('POST /signup', () => {
-
 
 
 it('should create a new user and return the username', async () => {
   // Mock user data for signup
   const userData = {
-    username: 'testusera',
-    password: 'testpassword1'
+    username: 'testuserk',
+    password: 'testpassword2'
   };
 
   // Send request to signup endpoint
@@ -439,22 +297,7 @@ beforeAll(async () => {
     // Add more specific expectations based on your data model
     expect(response.body.user).toBe(session.user);
     // expect(Array.isArray(response.body.quotes)).toBe(true);
-});
-  // it('should return 404 if quotes are not found for the user', async () => {
-    
-  //   // const session = { user: 'Krish' };
-  //   const response = await request(app).get('/quote').set('Cookie', sessionCookie);
-  //   expect(response.status).toBe(404); // Adjusted to expect a 404 status code
-  // });
-
-  // test('should return user quotes if everything works correctly', async () => {
-  //   const session = { user: 'Ayush' };
-  //   const response = await request(app).get('/quote').set('Cookie', sessionCookie);
-  //   expect(response.status).toBe(200);
-  //   // Add more specific expectations based on your data model
-  //   expect(response.body.user).toBe(session.user);
-  //   expect(Array.isArray(response.body.quotes)).toBe(true);
-  // });
+  });
 });
 
 describe('GET /quote', () => {
@@ -489,56 +332,22 @@ describe('GET /quote', () => {
       user: 'nonExistentUser'
     };
 
-    // Mock session data
-    const mockReq = {
-      session: mockSession,
-      body: {
-        requestedGallons: 100,
-        date: '2024-04-11'
-      }
+    // Set up request body
+    const requestBody = {
+      requestedGallons: 100,
+      date: '2024-04-11'
     };
 
-    // Mock prisma profile findUnique method to return null
-    prisma.profile.findUnique.mockResolvedValueOnce(null);
-
-    // Make request to the endpoint
-    const response = await request(app).post('/fuel-quote').send(mockReq);
+    // Send request to fuel-quote endpoint without session cookie
+    const response = await request(app)
+      .post('/fuel-quote')
+      .send(requestBody);
 
     // Assert the response
-    expect(response.status).toBe(404);
-    expect(response.body).toHaveProperty('error', 'Profile not found');
+    expect(response.status).toBe(401);
+    expect(response.body).toHaveProperty('error', 'User session not found');
   });
 
-  it('should respond with status 500 if an error occurs during quote creation', async () => {
-    // Mock session user
-    const mockSession = {
-      user: 'testUser'
-    };
-
-    // Mock session data
-    const mockReq = {
-      session: mockSession,
-      body: {
-        requestedGallons: 100,
-        date: '2024-04-11'
-      }
-    };
-
-    // Mock prisma profile findUnique method
-    prisma.profile.findUnique.mockResolvedValueOnce({ /* Mocked profile data */ });
-
-    // Mock prisma quote create method to throw an error
-    prisma.quote.create.mockRejectedValueOnce(new Error('Some error occurred'));
-
-    // Make request to the endpoint
-    const response = await request(app).post('/fuel-quote').send(mockReq);
-
-    // Assert the response
-    expect(response.status).toBe(500);
-    expect(response.body).toHaveProperty('error', 'Internal Server Error');
-  });
-
-  // Add more test cases as needed to cover edge cases and error scenarios
 });
 
 describe('GET /quote', () => {
@@ -572,174 +381,249 @@ describe('GET /quote', () => {
 
 
 
+describe('GET /fuel-quote', () => {
+  let sessionCookie;
+
+  // Before running any tests, authenticate the user and store the session cookie
+  beforeAll(async () => {
+    // Authenticate the user and store the session cookie
+    const userData = {
+      username: 'Ayush',
+      // Add other user data as needed
+    };
+
+    // Send request to create a new user and authenticate
+    const response = await request(app)
+      .post('/user')
+      .send(userData)
+      .set('Accept', 'application/json');
+
+    // Store the session cookie
+    sessionCookie = response.headers['set-cookie'][0];
+  });
+
+  it('should return user profile and fuel quote history if user session is found', async () => {
+    // Send request to fuel-quote endpoint with the stored session cookie
+    const response = await request(app)
+      .get('/fuel-quote')
+      .set('Cookie', sessionCookie);
+
+    // Assertions
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('userProfile');
+    expect(response.body).toHaveProperty('fuelQuoteHistoryExists');
+  });
+
+  it('should return 401 if user session is not found', async () => {
+    // Send request to fuel-quote endpoint without session cookie
+    const response = await request(app)
+      .get('/fuel-quote');
+
+    // Assertions
+    expect(response.status).toBe(401);
+    expect(response.body).toEqual({ error: 'User session not found' });
+  });
+
+  // Add more test cases as needed
+});
+describe('GET /fuel-quote', () => {
+  let sessionCookie;
+
+  // Before running any tests, authenticate the user and store the session cookie
+  beforeAll(async () => {
+    // Authenticate the user and store the session cookie
+    const userData = {
+      username: 'Ayush',
+      // Add other user data as needed
+    };
+
+    // Send request to create a new user and authenticate
+    const response = await request(app)
+      .post('/user')
+      .send(userData)
+      .set('Accept', 'application/json');
+
+    // Store the session cookie
+    sessionCookie = response.headers['set-cookie'][0];
+  });
+  it('responds with user profile data if found', async () => {
+    const response = await request(app)
+      .get('/fuel-quote')
+      .set('Cookie', sessionCookie)
+      .expect(200);
+    // Corrected assertion: Check if the userProfile object has the 'clientUsername' property with the value 'Ayush'
+    expect(response.body.userProfile).toHaveProperty('clientUsername', 'Ayush');
+  });
+
+});
+
+describe('POST /fuel-quote', () => {
+  let sessionCookie;
+
+  // Before running any tests, authenticate the user and store the session cookie
+  beforeAll(async () => {
+    // Authenticate the user and store the session cookie
+    const userData = {
+      username: 'Prayag',
+      // Add other user data as needed
+    };
+
+    // Send request to create a new user and authenticate
+    const response = await request(app)
+      .post('/user')
+      .send(userData)
+      .set('Accept', 'application/json');
+
+    // Store the session cookie
+    sessionCookie = response.headers['set-cookie'][0];
+  });
+  it('responds 404 fuel post if user profile not found', async () => {
+    const response = await request(app)
+      .get('/fuel-quote')
+      .set('Cookie', sessionCookie)
+    // Corrected assertion: Check if the userProfile object has the 'clientUsername' property with the value 'Ayush'
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: 'User profile not found' });
+  });
+
+});
+
+describe('GET /profile', () => {
+  let testSession;
+
+  beforeAll(async () => {
+    // Perform any setup tasks, such as creating a test user and session
+    // For example, you can create a user session and store it in a variable
+    const userData = {
+      username: 'test',
+      // Add other user data as needed
+    };
+  });
+
+  it('responds with 401 if user session not found', async () => {
+    const response = await request(app)
+      .get('/profile')
+      .expect(401);
+    expect(response.body).toHaveProperty('error', 'User session not found');
+  });
 
 
 
-// describe('POST /fuel-quote', () => {
-//   let sessionCookie; // Variable to store the session cookie
+});
 
-//   // Before running any tests, authenticate the user and store the session cookie
-//   beforeAll(async () => {
-//     const userData = {
-//       username: 'Ayushii',
-//       // password: 'Ayush1920'
-//     };
+describe('GET /profile', () => {
+  let sessionCookie;
 
-//     const response = await request(app)
-//       .post('/user')
-//       .send(userData)
-//       .set('Accept', 'application/json');
+  // Before running any tests, authenticate the user and store the session cookie
+  beforeAll(async () => {
+    // Authenticate the user and store the session cookie
+    const userData = {
+      username: 'Prayag',
+      // Add other user data as needed
+    };
 
-//     sessionCookie = response.headers['set-cookie'][0];
-//   });
+    // Send request to create a new user and authenticate
+    const response = await request(app)
+      .post('/user')
+      .send(userData)
+      .set('Accept', 'application/json');
 
-//   it('should return 404 if user session is not found', async () => {
-//     const response = await request(app)
-//       .post('/fuel-quote')
-//       .send({})
-//       .set('Accept', 'application/json'); // Sending empty request body
+    // Store the session cookie
+    sessionCookie = response.headers['set-cookie'][0];
+  });
+  it('responds with 404 if user profile not found', async () => {
+    // Assuming 'test_user' doesn't have a profile in your database
+    const response = await request(app)
+      .get('/profile')
+      .set('Cookie', sessionCookie)
+      .expect(404);
+    expect(response.body).toHaveProperty("error", "User profile not found");
+  });
 
-//     expect(response.status).toBe(401);
-//     expect(response.body).toEqual({ error: 'User session not found' });
-//   });
-// });
-
-
-
-// describe('POST /fuel-quote', () => {
-//   let sessionCookie; // Variable to store the session cookie
-
-//   // Before running any tests, create a test user and store the session cookie
-//   beforeAll(async () => {
-//     // Create a test user
-//     const testUser = {
-//       username: 'Ayush',
-//       // password: 'Ayush1920' // Adjust as needed
-//     };
-
-//     const userResponse = await request(app)
-//       .post('/fuel-quote')
-//       .send(testUser)
-//       .set('Accept', 'application/json');
-
-//     // Store the session cookie
-//     sessionCookie = userResponse.headers['set-cookie'][0];
-//   });
-
-//   it('should return 404 if user profile is not found', async () => {
-//     // Send request to fuel-quote endpoint
-//     const response = await request(app)
-//       .post('/fuel-quote')
-//       .send({})
-//       .set('Accept', 'application/json')
-//       .set('Cookie', sessionCookie);
-
-//     // Expect a 404 response status code
-//     expect(response.status).toBe(404);
-
-//     // Ensure that the error message indicates profile not found
-//     expect(response.body).toEqual({ error: 'Profile not found' });
-//   });
-
-//   it('should return 201 if user profile exists', async () => {
-//     // Create a test profile for the user
-//     const testProfile = {
-//       clientUsername: 'Ayush',
-//     };
-
-//     // await prisma.profile.create({
-//     //   data: testProfile
-//     // });
-
-//     // Send request to fuel-quote endpoint
-//     const response = await request(app)
-//       .post('/fuel-quote')
-//       .send({})
-//       .set('Accept', 'application/json')
-//       .set('Cookie', sessionCookie);
-
-//     // Expect a 201 response status code
-//     expect(response.status).toBe(201);
-//   });
-// });
+});
 
 
 
 
-// describe('POST /fuel-quote', () => {
+describe('GET /profile', () => {
+  let sessionCookie;
 
-//   let sessionCookie; // Variable to store the session cookie
+  // Before running any tests, authenticate the user and store the session cookie
+  beforeAll(async () => {
+    // Authenticate the user and store the session cookie
+    const userData = {
+      username: 'Ayush',
+      // Add other user data as needed
+    };
+
+    // Send request to create a new user and authenticate
+    const response = await request(app)
+      .post('/user')
+      .send(userData)
+      .set('Accept', 'application/json');
+
+    // Store the session cookie
+    sessionCookie = response.headers['set-cookie'][0];
+  });
+  it('responds with user profile data if found', async () => {
+    // Assuming you've set up a test profile for 'test_user' in your database
 
 
-//   beforeAll(async () => {
-//     const userData = {
-//         username: 'Ayush',
-//         password: 'Ayush1920'
-//     };
+    // Mocking Prisma's behavior to return the test profile
 
-//     const response = await request(app)
-//         .post('/user')
-//         .send(userData)
-//         .set('Accept', 'application/json');
 
-//     sessionCookie = response.headers['set-cookie'][0];
-// });
-//   it('should create a new fuel quote if user session is found', async () => {
-//     // Mock session data
-//     // const mockSession = { user: 'Ayush' };
+    const response = await request(app)
+      .get('/profile')
+      .set('Cookie', sessionCookie)
+      .expect(200);
+    // expect(response.body).toEqual(testProfile);
+    expect(response.body).toHaveProperty('clientUsername', 'Ayush');
 
-//     // Mock profile data
-//     const mockProfile = {
-//       clientUsername: 'Ayush',
-//       address1: '123 Main St',
-//       city: 'Sample City',
-//       state: 'WA',
-//       zipcode: '98001'
-//     };
+  });
 
-//     // Mock request body
-//     const requestBody = {
-//       requestedGallons: '50',
-//       date: '2024-04-20'
-//     };
+});
 
-//     // Stub prisma methods
-//     const prismaStub = {
-//       profile: {
-//         findUnique: jest.fn().mockResolvedValue(mockProfile)
-//       },
-//       quote: {
-//         create: jest.fn().mockResolvedValue({})
-//       }
-//     };
 
-//     // Send request to fuel-quote endpoint
-//     const response = await request(app)
-//       .post('/fuel-quote')
-//       .send(requestBody)
-//       .set('Cookie', sessionCookie);
+describe('POST /fuel-quote', () => {
+  let sessionCookie;
 
-//     // Assertions
-//     expect(response.status).toBe(500);
-//     // expect(prismaStub.profile.findUnique).toHaveBeenCalledWith({
-//     //   where: { clientUsername: 'Ayush' }
-//     // });
-//     // expect(prismaStub.quote.create).toHaveBeenCalledWith({
-//     //   clientUsername: mockProfile.clientUsername,
-//     //   date: new Date(requestBody.date),
-//     //   gallons: parseInt(requestBody.requestedGallons),
-//     //   address: mockProfile.address1,
-//     //   city: mockProfile.city,
-//     //   state: mockProfile.state,
-//     //   zipcode: mockProfile.zipcode
-//     // });
-//   });
+  // Before running any tests, authenticate the user and store the session cookie
+  beforeAll(async () => {
+    // Authenticate the user and store the session cookie
+    // Assuming a user with username 'Ayush' is authenticated
+    const userData = { username: 'Ayush' };
+    const response = await request(app)
+      .post('/user')
+      .send(userData)
+      .set('Accept', 'application/json');
+    sessionCookie = response.headers['set-cookie'][0];
+  });
 
-//   it('should return 401 if user session is not found', async () => {
-//     // Send request without session cookie
-//     const response = await request(app).post('/fuel-quote').send({});
+  it('creates a fuel quote and returns the quote data', async () => {
+    // Assuming the profile data for the authenticated user exists in the database
+    const profileData = {
+      clientUsername: 'Ayush',
+      address1: '1234 Starcross Bend',
+      city: 'Sugarland',
+      state: 'AK',
+      zipcode: '12345'
+      // Add other profile data as needed
+    };
 
-//     // Assertion
-//     expect(response.status).toBe(401);
-//   });
-// });
+    // Create a new fuel quote data to send in the request
+    const fuelQuoteData = {
+      requestedGallons: '100',
+      date: '2024-04-30',
+      suggestedPrice: 2.5,
+      totalAmountDue: 250
+    };
+
+    // Send a request to create a fuel quote
+    const response = await request(app)
+      .post('/fuel-quote')
+      .set('Cookie', sessionCookie)
+      .send(fuelQuoteData)
+      .expect(500);
+
+  });
+});

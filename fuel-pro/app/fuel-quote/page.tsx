@@ -173,6 +173,25 @@ function page() {
     { value: 'WI', label: 'Wisconsin' },
     { value: 'WY', label: 'Wyoming' },
   ];
+
+  const calculatePrice = (gallonsRequested: any, locationFactor: any, hasHistory: any) => {
+    const currentPrice = 1.50; // Current price per gallon
+    const locationMargin = locationFactor === 'TX' ? 0.02 : 0.04;
+    const rateHistoryMargin = hasHistory ? 0.01 : 0;
+    const gallonsRequestedMargin = gallonsRequested > 1000 ? 0.02 : 0.03;
+    const companyProfitMargin = 0.10;
+
+    const margin = (locationMargin - rateHistoryMargin + gallonsRequestedMargin + companyProfitMargin) * currentPrice;
+    const suggestedPrice = currentPrice + margin;
+    const totalAmountDue = suggestedPrice * gallonsRequested;
+
+    return {
+      suggestedPrice: suggestedPrice.toFixed(3),
+      totalAmountDue: totalAmountDue.toFixed(3)
+    };
+  };
+
+
   // handeling changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -184,6 +203,9 @@ function page() {
     setFormData({ ...formData, [e.target.name]: e.target.value })
     console.log(`Selected state: ${newState}`);
   };
+
+  const [suggestedPrice, setSuggestedPrice] = useState<string>('');
+  const [totalAmountDue, setTotalAmountDue] = useState<string>('');
 
   const handleGetQuote = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault(); 
@@ -209,6 +231,17 @@ function page() {
       return;
     }
     else{
+
+      const { suggestedPrice, totalAmountDue } = calculatePrice(Number(gallonsValue), formData.state === 'TX' ? 'TX' : 'out-of-state', historyExists);
+
+
+      // Set suggested price and total amount due
+      setSuggestedPrice(suggestedPrice);
+      setTotalAmountDue(totalAmountDue);
+
+      console.log(suggestedPrice);
+      console.log(totalAmountDue);
+
       console.log("Temporary FormData:", formData);
 
     }
@@ -219,16 +252,24 @@ function page() {
     e.preventDefault();
 
 
-
     try {
         // Send the request with formData
         const response = await axios.post("http://localhost:4000/fuel-quote", {
-            requestedGallons: formData.gallons, // Use 'requestedGallons' as the field name
-            date: formData.date
+          requestedGallons: formData.gallons,
+          date: formData.date,
+          address1: formData.address1,
+          address2: formData.address2,
+          city: formData.city,
+          state: formData.state,
+          zipcode: formData.zipcode,
+          suggestedPrice,
+          totalAmountDue,
         }, { withCredentials: true });
 
+      console.log(suggestedPrice, totalAmountDue);
+
         // Check if the response is successful
-        if (response.status === 201) {
+      if (response.status === 200) {
             console.log('Fuel quote created successfully:', response.data);
             // Clear the form data and error state
             
@@ -240,26 +281,42 @@ function page() {
     }
 };
 
+  const [historyExists, setHistoryExists] = useState(false);
+
   useEffect(() => {
     // Define a function to fetch user data
     const fetchUserProfile = async () => {
       try {
         // Make API call to fetch user profile data
-        const response = await axios.get('http://localhost:4000/profile', { withCredentials: true });
+        const response = await axios.get('http://localhost:4000/fuel-quote', { withCredentials: true });
 
-
+        console.log(response.data);
         // Extract required fields from response data
-        const { address1, address2, city, state, zipcode } = response.data;
+
+        // const { address1, address2, city, state, zipcode, fuelQuoteHistoryExists } = response.data;
+        // console.log("deconstrucudsjvsdncmbsd", address1, address2, city, state, zipcode, fuelQuoteHistoryExists);
 
         // Set form data with extracted fields and default values for missing fields
+        // setFormData(prevFormData => ({
+        //   ...prevFormData,
+        //   address1,
+        //   address2,
+        //   city,
+        //   state,
+        //   zipcode
+        // }));
+        // setHistoryExists(fuelQuoteHistoryExists); 
         setFormData(prevFormData => ({
           ...prevFormData,
-          address1,
-          address2,
-          city,
-          state,
-          zipcode
+          address1: response.data.userProfile.address1,
+          address2: response.data.userProfile.address2,
+          city: response.data.userProfile.city,
+          state: response.data.userProfile.state,
+          zipcode: response.data.userProfile.zipcode
         }));
+
+        // Set history exists state
+        setHistoryExists(response.data.fuelQuoteHistoryExists);
       } catch (error) {
         console.error('Error fetching data from profile:', error);
       }
@@ -271,6 +328,8 @@ function page() {
 
   const inputcss = 'border-2 border-gray-500 p-1  text-black rounded-md focus:border-red-500 focus:ring-red-500 w-full sm:p-3'
   const lableCss ='block pb-2 text-md'
+
+
   return (
     <div>
 
@@ -432,14 +491,14 @@ function page() {
               Suggested Price per Gallon:
             </label>
             <div
-              className='border-2 border-gray-500 p-1  text-black rounded-md bg-white w-full sm:p-3'> Fix it</div>
+              className='border-2 border-gray-500 p-1  text-black rounded-md bg-white w-full sm:p-3' > {suggestedPrice ? `$${suggestedPrice}` : 'Suggested Price'}</div>
           </div>
           {/* final price */}
           <div className="pb-4">
             <label htmlFor='totalAmount' className={lableCss}>
               Final Price
             </label>
-            <div className='border-2 border-gray-500 p-1  text-black rounded-md bg-white w-full sm:p-3'> Fix it</div>
+            <div className='border-2 border-gray-500 p-1  text-black rounded-md bg-white w-full sm:p-3'> {totalAmountDue ? `$${totalAmountDue}` : 'Total Amount Due'}</div>
           </div>
 
           {/* submit Quote button */}

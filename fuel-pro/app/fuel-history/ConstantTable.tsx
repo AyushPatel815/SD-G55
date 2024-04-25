@@ -1,5 +1,5 @@
 // import React from 'react';
-// import Image from 'next/image';
+import Image from 'next/image';
 
 // interface Row {
 //   Order_Number: number;
@@ -108,42 +108,68 @@ const QuoteList = () => {
     fetchQuotes();
   }, []);
 
+  const innerCss = 'border border-green-900 p-2 bg-white';
   return (
     <div>
-      <h2>Fuel Quote History</h2>
+      <div className='relative'>
+        <Image className='fixed inset-0 h-screen w-screen object-cover object-center z-[-50] brightness-[65%]'
+          src='/dashboard-img.png'
+          alt={''} width={600} height={600}></Image>
+      </div>
+      {/* <h2 className=' textt-white'>Fuel Quote History</h2> */}
+      <div className='mt-16 ml-[20%] mx-14 flex overflow-auto h-[600px] border bg-transparent border-black w-[1350px]' >
+
       {quotes.length === 0 ? (
-        <p>No quotes found</p>
+        <p className=' text-white'>No quotes found</p>
       ) : (
         <table>
           <thead>
             <tr>
-              <th>Date</th>
-              <th>Gallons</th>
-              <th>Price</th>
-              <th>Due</th>
-              <th>Address</th>
-              <th>City</th>
-              <th>State</th>
-              <th>Zipcode</th>
+                  <th className={innerCss}
+                  >Date</th>
+                  <th className={innerCss}
+                  >Gallons</th>
+                  <th className={innerCss}
+                  >Price</th>
+                  <th className={innerCss}
+                  >Due</th>
+                  <th className={innerCss}
+                  >Address</th>
+                  <th className={innerCss}
+                  >City</th>
+                  <th className={innerCss}
+                  >State</th>
+                  <th className={innerCss}
+                  >Zipcode</th>
             </tr>
           </thead>
           <tbody>
             {quotes.map((quote) => (
               <tr key={quote.id}>
-                <td>{quote.date}</td>
-                <td>{quote.gallons}</td>
-                <td>{quote.price}</td>
-                <td>{quote.due}</td>
-                <td>{quote.address}</td>
-                <td>{quote.city}</td>
-                <td>{quote.state}</td>
-                <td>{quote.zipcode}</td>
+                <td className={innerCss}
+                >{quote.date}</td>
+                <td className={innerCss}
+                >{quote.gallons}</td>
+                <td className={innerCss}
+                >{quote.price}</td>
+                <td className={innerCss}
+                >{quote.due}</td>
+                <td className={innerCss}
+                >{quote.address}</td>
+                <td className={innerCss}
+                >{quote.city}</td>
+                <td className={innerCss}
+                >{quote.state}</td>
+                <td className={innerCss}
+                >{quote.zipcode}</td>
+                
               </tr>
             ))}
           </tbody>
         </table>
       )}
       {error && <p>{error}</p>}
+      </div>
     </div>
   );
 };

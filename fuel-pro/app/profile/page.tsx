@@ -9,6 +9,7 @@ import Background_img from "../../public/dashboard-img.png"
 // import State from '../components/StateDropdown';
 
 import axios from 'axios'; // Import Axios
+import { redirect } from 'next/navigation';
 
 
 function Profile() {
@@ -58,7 +59,7 @@ function Profile() {
     zipcode: ''
   });
 
-
+  const [saveProfile, setsaveProfile] = useState<boolean>(false);
 
   const validateInput = (name: string, value: string) => {
     switch (name) {
@@ -177,6 +178,8 @@ function Profile() {
         console.log('Profile data:', response.data);
 
         console.log('Profile saved successfully:', response.data);
+        setsaveProfile(true);
+        // redirect('/dashboard')
       } catch (error) {
         console.error('Error saving profile:', error);
       }
@@ -186,7 +189,9 @@ function Profile() {
     }
 
   }
-
+  if (saveProfile) {
+    return redirect('/dashboard'); // Redirect if logged in
+  }
   useEffect(() => {
     // Define a function to fetch user data
     const fetchUserProfile = async () => {
@@ -195,7 +200,9 @@ function Profile() {
         const response = await axios.get('http://localhost:4000/profile', { withCredentials: true });
 
         // Set form data with fetched data
+        console.log(response.data)
         setFormData(response.data);
+
       } catch (error) {
         console.error('Error fetching profile data:', error);
       }
