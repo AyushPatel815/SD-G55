@@ -137,7 +137,7 @@ app.post('/profile', async (req, res) => {
         }
 
         const username = userSession.user;
-        const { firstName, lastName, address1, address2, city, state, zip } = req.body;
+        const { firstName, lastName, address1, address2, city, state, zipcode } = req.body;
 
         // Find the user's profile in the database based on the username
         let existingProfile = await prisma.profile.findUnique({
@@ -157,7 +157,7 @@ app.post('/profile', async (req, res) => {
                     address2: address2,
                     city: city,
                     state: state,
-                    zipcode: zip
+                    zipcode: zipcode
                 }
             });
         } else {
@@ -173,7 +173,7 @@ app.post('/profile', async (req, res) => {
                     address2: address2,
                     city: city,
                     state: state,
-                    zipcode: zip
+                    zipcode: zipcode
                 }
             });
         }
